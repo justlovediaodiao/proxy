@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -68,6 +69,7 @@ func getGfwList() ([]byte, error) {
 func UpdatePAC(proxyURL string) error {
 	content, err := getGfwList()
 	if err != nil {
+		fmt.Println("get online gfwlist failed, use local instead")
 		content, err = ioutil.ReadFile("resources/gfwlist.txt")
 		if err != nil {
 			return err

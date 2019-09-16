@@ -36,6 +36,7 @@ func cmdPAC() {
 	}
 	var addr = fmt.Sprintf("%s:%d", p.PACHost, p.PACPort)
 	StartServer(addr)
+	cmdOff()
 }
 
 func cmdOn() {
@@ -55,6 +56,7 @@ func cmdOn() {
 		}
 		var addr = fmt.Sprintf("%s:%d", p.PACHost, p.PACPort)
 		StartServer(addr)
+		cmdOff()
 	}
 }
 
