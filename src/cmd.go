@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/signal"
 	"path/filepath"
 )
 
@@ -18,7 +19,29 @@ func cmdGlobal() {
 	err = SetGlobal(p)
 	if err != nil {
 		fmt.Println(err)
+	} else {
+		fmt.Println("proxy set to global mode")
 	}
+}
+
+func startPAC(p *Proxy) {
+	var err = SetPAC(p)
+	if err != nil {
+		fmt.Println(err)
+	}
+	var addr = fmt.Sprintf("%s:%d", p.PACHost, p.PACPort)
+	fmt.Println("proxy set to pac mode\npac server is running...")
+	// ctrl+c exit
+	var c = make(chan os.Signal)
+	signal.Notify(c, os.Interrupt)
+	go func() {
+		<-c
+		cmdOff()
+		os.Exit(0)
+	}()
+	err = StartServer(addr)
+	fmt.Println(err)
+	cmdOff()
 }
 
 func cmdPAC() {
@@ -30,13 +53,7 @@ func cmdPAC() {
 		p.Global = false
 		SaveConfig(p)
 	}
-	err = SetPAC(p)
-	if err != nil {
-		fmt.Println(err)
-	}
-	var addr = fmt.Sprintf("%s:%d", p.PACHost, p.PACPort)
-	StartServer(addr)
-	cmdOff()
+	startPAC(p)
 }
 
 func cmdOn() {
@@ -48,15 +65,11 @@ func cmdOn() {
 		err = SetGlobal(p)
 		if err != nil {
 			fmt.Println(err)
+		} else {
+			fmt.Println("proxy set to global mode")
 		}
 	} else {
-		err = SetPAC(p)
-		if err != nil {
-			fmt.Println(err)
-		}
-		var addr = fmt.Sprintf("%s:%d", p.PACHost, p.PACPort)
-		StartServer(addr)
-		cmdOff()
+		startPAC(p)
 	}
 }
 
@@ -64,6 +77,8 @@ func cmdOff() {
 	var err = Reset()
 	if err != nil {
 		fmt.Println(err)
+	} else {
+		fmt.Println("proxy cleared")
 	}
 }
 
@@ -75,6 +90,8 @@ func cmdUpdate() {
 	err = UpdatePAC(p.URL())
 	if err != nil {
 		fmt.Println(err)
+	} else {
+		fmt.Println("pac updated")
 	}
 }
 
