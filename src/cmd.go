@@ -16,18 +16,14 @@ func cmdGlobal() {
 		p.Global = true
 		SaveConfig(p)
 	}
-	err = SetGlobal(p)
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println("proxy set to global mode")
-	}
+	startGlobal(p)
 }
 
 func startPAC(p *Proxy) {
 	var err = SetPAC(p)
 	if err != nil {
 		fmt.Println(err)
+        return
 	}
 	var addr = fmt.Sprintf("%s:%d", p.PACHost, p.PACPort)
 	fmt.Println("proxy set to pac mode\npac server is running...")
@@ -42,6 +38,15 @@ func startPAC(p *Proxy) {
 	err = StartServer(addr)
 	fmt.Println(err)
 	cmdOff()
+}
+
+func startGlobal(p *Proxy) {
+	var err = SetGlobal(p)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("proxy set to global mode")
+	}
 }
 
 func cmdPAC() {
@@ -62,12 +67,7 @@ func cmdOn() {
 		fmt.Println(err)
 	}
 	if p.Global {
-		err = SetGlobal(p)
-		if err != nil {
-			fmt.Println(err)
-		} else {
-			fmt.Println("proxy set to global mode")
-		}
+		startGlobal(p)
 	} else {
 		startPAC(p)
 	}

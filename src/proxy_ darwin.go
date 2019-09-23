@@ -19,11 +19,18 @@ func SetGlobal(p *Proxy) error {
 	for _, network := range networks {
 		if p.Protocol == "http" {
 			_, err = execute("networksetup", "-setwebproxy", network, p.Host, strconv.Itoa(p.Port))
+			if err != nil {
+				return err
+			}
+			_, err = execute("networksetup", "-setsecurewebproxy", network, p.Host, strconv.Itoa(p.Port))
+			if err != nil {
+				return err
+			}
 		} else if p.Protocol == "socks" {
 			_, err = execute("networksetup", "-setsocksfirewallproxy", network, p.Host, strconv.Itoa(p.Port))
-		}
-		if err != nil {
-			return err
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil
