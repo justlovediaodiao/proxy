@@ -18,7 +18,7 @@ type Proxy struct {
 func (p *Proxy) URL() string {
 	if p.Protocol == "http" {
 		return fmt.Sprintf("PROXY %s:%d;DIRECT", p.Host, p.Port)
-	} else if p.Protocol == "SOCKS" {
+	} else if p.Protocol == "socks" {
 		return fmt.Sprintf("SOCKS %s:%d;DIRECT", p.Host, p.Port)
 	}
 	panic(fmt.Sprintf("unspported proxy protocol %s", p.Protocol))
