@@ -24,10 +24,6 @@ func Reset() error {
 	return execute("resources/sysproxy.exe", "set", "1", "-", "-", "-")
 }
 
-func StartV2ray() error {
-	return execute("v2ray/v2ray.exe", "-config", "v2ray/config.json")
-}
-
 func execute(name string, args ...string) error {
 	var cmd = exec.Command(name, args...)
 	_, err := cmd.Output()
