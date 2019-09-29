@@ -23,13 +23,13 @@ func startPAC(p *Proxy) {
 	var err = SetPAC(p)
 	if err != nil {
 		fmt.Println(err)
-        return
+		return
 	}
 	var addr = fmt.Sprintf("%s:%d", p.PACHost, p.PACPort)
 	fmt.Println("proxy set to pac mode\npac server is running...")
 	// ctrl+c exit
 	var c = make(chan os.Signal)
-	signal.Notify(c, os.Interrupt)
+	signal.Notify(c, os.Interrupt, os.Kill)
 	go func() {
 		<-c
 		cmdOff()
