@@ -4,5 +4,5 @@
     "protocol": "http",
     "pac_host": "127.0.0.1",
     "pac_port": 1081,
-    "global": false
+    "proxy_command": ""
 }

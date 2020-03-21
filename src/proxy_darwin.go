@@ -1,9 +1,9 @@
 package main
 
 import (
-	"strconv"
 	"fmt"
 	"os/exec"
+	"strconv"
 	"strings"
 )
 
@@ -61,6 +61,12 @@ func Reset() error {
 		return err
 	}
 	return reset(networks)
+}
+
+func StartProxy(cmd string) error {
+	var arr = strings.Split(cmd, " ")
+	_, err := execute(arr[0], arr[1:]...)
+	return err
 }
 
 func reset(networks []string) error {

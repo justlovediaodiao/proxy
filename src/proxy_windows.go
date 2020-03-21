@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os/exec"
+	"strings"
 )
 
 func SetGlobal(p *Proxy) error {
@@ -22,6 +23,11 @@ func SetPAC(p *Proxy) error {
 
 func Reset() error {
 	return execute("resources/sysproxy.exe", "set", "1", "-", "-", "-")
+}
+
+func StartProxy(cmd string) error {
+	var arr = strings.Split(cmd, " ")
+	return execute(arr[0], arr[1:]...)
 }
 
 func execute(name string, args ...string) error {

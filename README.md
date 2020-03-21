@@ -18,7 +18,7 @@ run `build.sh` on mac, `build.bat` on windows.
     "protocol": "http",     # proxy protocol, http or socks.
     "pac_host": "127.0.0.1",# pac server listen host, default 127.0.0.1
     "pac_port": 1081,       # pac server listen port, default 1081
-    "global": false,        # use pac mode or global mode
+    "proxy_command": "",    # command to start proxy process
 }
 ```
 
@@ -29,7 +29,6 @@ supported commands list:
 proxy
     g/global: set proxy to global mode.
     pac: set proxy to pac mode.
-    on: set proxy to last used mode.
     off: clear proxy.
     update: update pac file.
 ```

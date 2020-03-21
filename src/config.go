@@ -7,12 +7,12 @@ import (
 )
 
 type Proxy struct {
-	Host     string `json:"host"`
-	Port     int    `json:"port"`
-	Protocol string `json:"protocol"`
-	PACHost  string `json:"pac_host"`
-	PACPort  int    `json:"pac_port"`
-	Global   bool   `json:"global"`
+	Host         string `json:"host"`
+	Port         int    `json:"port"`
+	Protocol     string `json:"protocol"`
+	PACHost      string `json:"pac_host"`
+	PACPort      int    `json:"pac_port"`
+	ProxyCommand string `json:"proxy_command"`
 }
 
 func (p *Proxy) URL() string {
@@ -34,12 +34,4 @@ func GetConfig() (*Proxy, error) {
 		return nil, err
 	}
 	return result, nil
-}
-
-func SaveConfig(p *Proxy) error {
-	content, err := json.MarshalIndent(p, "", "    ")
-	if err != nil {
-		return err
-	}
-	return ioutil.WriteFile("resources/config.json", content, 0644)
 }
