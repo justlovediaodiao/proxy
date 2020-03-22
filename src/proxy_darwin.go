@@ -26,7 +26,8 @@ func SetGlobal(p *Proxy) error {
 			if err != nil {
 				return err
 			}
-		} else if p.Protocol == "socks" {
+
+		} else if strings.HasPrefix(p.Protocol, "socks") {
 			_, err = execute("networksetup", "-setsocksfirewallproxy", network, p.Host, strconv.Itoa(p.Port))
 			if err != nil {
 				return err

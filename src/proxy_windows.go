@@ -10,7 +10,7 @@ func SetGlobal(p *Proxy) error {
 	var addr string
 	if p.Protocol == "http" {
 		addr = fmt.Sprintf("%s:%d", p.Host, p.Port)
-	} else if p.Protocol == "socks" {
+	} else if strings.HasPrefix(p.Protocol, "socks") {
 		addr = fmt.Sprintf("socks=%s:%d", p.Host, p.Port)
 	}
 	return execute("resources/sysproxy.exe", "global", addr)

@@ -3,7 +3,7 @@
 
 // 2019-02-08: Updated to support shadowsocks-windows user rules.
 
-var proxy = "PROXY 127.0.0.1:1080;DIRECT";
+var proxy = "SOCKS 127.0.0.1:1080;DIRECT";
 
 var userrules = [];
 var rules = [
