@@ -1,7 +1,7 @@
 {
     "host": "127.0.0.1",
     "port": 1080,
-    "protocol": "http",
+    "protocol": "socks5",
     "pac_host": "127.0.0.1",
     "pac_port": 1081,
     "proxy_command": ""

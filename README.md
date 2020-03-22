@@ -15,7 +15,7 @@ run `build.sh` on mac, `build.bat` on windows.
 {
     "host": "127.0.0.1",    # proxy server host
     "port": 1080,           # proxy server port
-    "protocol": "http",     # proxy protocol, http or socks.
+    "protocol": "http",     # proxy protocol, http or socks/socks5/socks4
     "pac_host": "127.0.0.1",# pac server listen host, default 127.0.0.1
     "pac_port": 1081,       # pac server listen port, default 1081
     "proxy_command": "",    # command to start proxy process

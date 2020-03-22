@@ -20,6 +20,10 @@ func (p *Proxy) URL() string {
 		return fmt.Sprintf("PROXY %s:%d;DIRECT", p.Host, p.Port)
 	} else if p.Protocol == "socks" {
 		return fmt.Sprintf("SOCKS %s:%d;DIRECT", p.Host, p.Port)
+	} else if p.Protocol == "socks5" {
+		return fmt.Sprintf("SOCKS5 %s:%d;DIRECT", p.Host, p.Port)
+	} else if p.Protocol == "socks4" {
+		return fmt.Sprintf("SOCKS4 %s:%d;DIRECT", p.Host, p.Port)
 	}
 	panic(fmt.Sprintf("unspported proxy protocol %s", p.Protocol))
 }
