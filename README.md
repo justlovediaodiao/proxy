@@ -6,7 +6,7 @@ it makes a pac file and set system proxy to pac mode. **it is not a proxy server
 
 ### build
 
-run `build.sh` on mac, `build.bat` on windows.
+run `go build src`
 
 ### config
 
