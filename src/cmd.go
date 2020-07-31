@@ -87,7 +87,7 @@ func cmdUpdate() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	err = UpdatePAC(p.URL())
+	err = UpdatePAC(p)
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -96,7 +96,7 @@ func cmdUpdate() {
 }
 
 func cmdHelp() {
-	fmt.Println("usage proxy [g/global/pac/off/update]")
+	fmt.Println("usage proxy [g/global/pac/off/clear/update]")
 }
 
 func main() {
@@ -120,7 +120,7 @@ func main() {
 		cmdGlobal()
 	case "pac":
 		cmdPAC()
-	case "off":
+	case "off", "clear":
 		cmdOff()
 	case "update":
 		cmdUpdate()

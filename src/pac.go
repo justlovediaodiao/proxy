@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
@@ -49,8 +50,21 @@ func merge(gfw string, proxyURL string) (string, error) {
 	return text, nil
 }
 
-func getGfwList() ([]byte, error) {
+func getGfwList(p *Proxy) ([]byte, error) {
+	// if failed, use proxy
 	res, err := http.Get("https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt")
+	if err != nil {
+		if p.Protocol == "socks5" || p.Protocol == "http" {
+			var proxyURL = fmt.Sprintf("%s://%s:%d", p.Protocol, p.Host, p.Port)
+			var transport = http.DefaultTransport.(*http.Transport)
+			transport.Proxy = func(*http.Request) (*url.URL, error) {
+				return url.Parse(proxyURL)
+			}
+			res, err = http.Get("https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt")
+			transport.Proxy = nil
+		}
+	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -66,8 +80,8 @@ func getGfwList() ([]byte, error) {
 	return content, nil
 }
 
-func UpdatePAC(proxyURL string) error {
-	content, err := getGfwList()
+func UpdatePAC(p *Proxy) error {
+	content, err := getGfwList(p)
 	if err != nil {
 		fmt.Println("get online gfwlist failed, use local instead")
 		content, err = ioutil.ReadFile("resources/gfwlist.txt")
@@ -80,7 +94,7 @@ func UpdatePAC(proxyURL string) error {
 			return err
 		}
 	}
-	abp, err := merge(string(content), proxyURL)
+	abp, err := merge(string(content), p.URL())
 	if err != nil {
 		return err
 	}

@@ -29,7 +29,7 @@ supported commands list:
 proxy
     g/global: set proxy to global mode.
     pac: set proxy to pac mode.
-    off: clear proxy.
+    off/clear: clear proxy.
     update: update pac file.
 ```
 
