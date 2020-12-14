@@ -7,7 +7,8 @@ import (
 	"strings"
 )
 
-func SetGlobal(p *Proxy) error {
+// SetGlobal set os proxy to http or socks.
+func SetGlobal(c *Config) error {
 	networks, err := listNetwork()
 	if err != nil {
 		return err
@@ -17,18 +18,18 @@ func SetGlobal(p *Proxy) error {
 		return nil
 	}
 	for _, network := range networks {
-		if p.Protocol == "http" {
-			_, err = execute("networksetup", "-setwebproxy", network, p.Host, strconv.Itoa(p.Port))
+		if c.Protocol == "http" {
+			_, err = execute("networksetup", "-setwebproxy", network, c.Host, strconv.Itoa(c.Port))
 			if err != nil {
 				return err
 			}
-			_, err = execute("networksetup", "-setsecurewebproxy", network, p.Host, strconv.Itoa(p.Port))
+			_, err = execute("networksetup", "-setsecurewebproxy", network, c.Host, strconv.Itoa(c.Port))
 			if err != nil {
 				return err
 			}
 
-		} else if strings.HasPrefix(p.Protocol, "socks") {
-			_, err = execute("networksetup", "-setsocksfirewallproxy", network, p.Host, strconv.Itoa(p.Port))
+		} else if strings.HasPrefix(c.Protocol, "socks") {
+			_, err = execute("networksetup", "-setsocksfirewallproxy", network, c.Host, strconv.Itoa(c.Port))
 			if err != nil {
 				return err
 			}
@@ -37,7 +38,8 @@ func SetGlobal(p *Proxy) error {
 	return nil
 }
 
-func SetPAC(p *Proxy) error {
+// SetPAC set os proxy to pac.
+func SetPAC(c *Config) error {
 	networks, err := listNetwork()
 	if err != nil {
 		return err
@@ -46,7 +48,7 @@ func SetPAC(p *Proxy) error {
 	if err != nil {
 		return nil
 	}
-	var url = fmt.Sprintf("http://%s:%d", p.PACHost, p.PACPort)
+	var url = fmt.Sprintf("http://%s:%d", c.PACHost, c.PACPort)
 	for _, network := range networks {
 		_, err = execute("networksetup", "-setautoproxyurl", network, url)
 		if err != nil {
@@ -56,6 +58,7 @@ func SetPAC(p *Proxy) error {
 	return nil
 }
 
+// Reset clear os proxy settings.
 func Reset() error {
 	networks, err := listNetwork()
 	if err != nil {
@@ -64,6 +67,7 @@ func Reset() error {
 	return reset(networks)
 }
 
+// StartProxy start proxy process. block until process exit.
 func StartProxy(cmd string) error {
 	var arr = strings.Split(cmd, " ")
 	_, err := execute(arr[0], arr[1:]...)

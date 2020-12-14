@@ -8,74 +8,78 @@ import (
 )
 
 func cmdGlobal() {
-	p, err := GetConfig()
+	c, err := GetConfig()
 	if err != nil {
 		fmt.Println(err)
 	}
-	startGlobal(p)
-}
-
-func startPAC(p *Proxy) {
-	var err = SetPAC(p)
-	if err != nil {
+	if err = SetGlobal(c); err != nil {
 		fmt.Println(err)
 		return
 	}
-	var addr = fmt.Sprintf("%s:%d", p.PACHost, p.PACPort)
-	fmt.Println("proxy set to pac mode")
-	onClose(cmdOff)
-	if p.ProxyCommand != "" {
-		go startProxy(p)
-	}
-	fmt.Println("start pac server")
-	err = StartServer(addr)
-	fmt.Println(err)
-	cmdOff()
-}
-
-func startGlobal(p *Proxy) {
-	var err = SetGlobal(p)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	defer Reset()
+	onExit(Reset)
 	fmt.Println("proxy set to global mode")
-	onClose(cmdOff)
-	if p.ProxyCommand != "" {
-		go startProxy(p)
+
+	if c.ProxyCommand != "" {
+		fmt.Println("start proxy")
+		if err = StartProxy(c.ProxyCommand); err != nil {
+			fmt.Println(err)
+		}
+	} else {
+		<-(chan int)(nil)
 	}
-	<-(chan int)(nil)
 }
 
-func onClose(handler func()) {
+func onExit(f func() error) {
 	var c = make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, os.Kill)
 	go func() {
 		<-c
-		handler()
+		f()
 		os.Exit(0)
 	}()
 }
 
-func startProxy(p *Proxy) {
-	fmt.Println("start proxy")
-	err := StartProxy(p.ProxyCommand)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
 func cmdPAC() {
-	p, err := GetConfig()
+	c, err := GetConfig()
 	if err != nil {
 		fmt.Println(err)
 	}
-	startPAC(p)
+	if err = SetPAC(c); err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer Reset()
+	onExit(Reset)
+	fmt.Println("proxy set to pac mode")
+
+	var addr = fmt.Sprintf("%s:%d", c.PACHost, c.PACPort)
+	if c.ProxyCommand != "" {
+		var ch = make(chan error, 2)
+
+		fmt.Println("start proxy")
+		go func() {
+			ch <- StartProxy(c.ProxyCommand)
+		}()
+
+		fmt.Println("start pac server")
+		go func() {
+			ch <- StartServer(addr)
+		}()
+		// should not run to here, unless any of above goroutines exit.
+		if err = <-ch; err != nil {
+			fmt.Println(err)
+		}
+	} else {
+		fmt.Println("start pac server")
+		if err = StartServer(addr); err != nil {
+			fmt.Println(err)
+		}
+	}
 }
 
 func cmdOff() {
-	var err = Reset()
-	if err != nil {
+	if err := Reset(); err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Println("proxy cleared")
@@ -83,12 +87,11 @@ func cmdOff() {
 }
 
 func cmdUpdate() {
-	p, err := GetConfig()
+	c, err := GetConfig()
 	if err != nil {
 		fmt.Println(err)
 	}
-	err = UpdatePAC(p)
-	if err != nil {
+	if err = UpdatePAC(c); err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Println("pac updated")

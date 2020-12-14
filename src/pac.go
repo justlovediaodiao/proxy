@@ -50,12 +50,12 @@ func merge(gfw string, proxyURL string) (string, error) {
 	return text, nil
 }
 
-func getGfwList(p *Proxy) ([]byte, error) {
+func getGfwList(c *Config) ([]byte, error) {
 	// if failed, use proxy
 	res, err := http.Get("https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt")
 	if err != nil {
-		if p.Protocol == "socks5" || p.Protocol == "http" {
-			var proxyURL = fmt.Sprintf("%s://%s:%d", p.Protocol, p.Host, p.Port)
+		if c.Protocol == "socks5" || c.Protocol == "http" {
+			var proxyURL = fmt.Sprintf("%s://%s:%d", c.Protocol, c.Host, c.Port)
 			var transport = http.DefaultTransport.(*http.Transport)
 			transport.Proxy = func(*http.Request) (*url.URL, error) {
 				return url.Parse(proxyURL)
@@ -80,8 +80,9 @@ func getGfwList(p *Proxy) ([]byte, error) {
 	return content, nil
 }
 
-func UpdatePAC(p *Proxy) error {
-	content, err := getGfwList(p)
+// UpdatePAC update pac file.
+func UpdatePAC(c *Config) error {
+	content, err := getGfwList(c)
 	if err != nil {
 		fmt.Println("get online gfwlist failed, use local instead")
 		content, err = ioutil.ReadFile("resources/gfwlist.txt")
@@ -94,7 +95,7 @@ func UpdatePAC(p *Proxy) error {
 			return err
 		}
 	}
-	abp, err := merge(string(content), p.URL())
+	abp, err := merge(string(content), c.ProxyURL)
 	if err != nil {
 		return err
 	}
@@ -116,6 +117,7 @@ func handle(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// StartServer start a http server serve for pac file.
 func StartServer(addr string) error {
 	return http.ListenAndServe(addr, http.HandlerFunc(handle))
 }
