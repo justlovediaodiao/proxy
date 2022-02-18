@@ -4,9 +4,10 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 )
 
@@ -25,11 +26,11 @@ func toValidList(list []string) []string {
 }
 
 func merge(gfw string, proxyURL string) (string, error) {
-	abp, err := ioutil.ReadFile("resources/abp.js")
+	abp, err := os.ReadFile("resources/abp.js")
 	if err != nil {
 		return "", err
 	}
-	rule, err := ioutil.ReadFile("resources/user-rule.txt")
+	rule, err := os.ReadFile("resources/user-rule.txt")
 	if err != nil {
 		return "", err
 	}
@@ -69,7 +70,7 @@ func getGfwList(c *Config) ([]byte, error) {
 		return nil, err
 	}
 	defer res.Body.Close()
-	content, err := ioutil.ReadAll(res.Body)
+	content, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -85,12 +86,12 @@ func UpdatePAC(c *Config) error {
 	content, err := getGfwList(c)
 	if err != nil {
 		fmt.Println("get online gfwlist failed, use local instead")
-		content, err = ioutil.ReadFile("resources/gfwlist.txt")
+		content, err = os.ReadFile("resources/gfwlist.txt")
 		if err != nil {
 			return err
 		}
 	} else {
-		err = ioutil.WriteFile("resources/gfwlist.txt", content, 0644)
+		err = os.WriteFile("resources/gfwlist.txt", content, 0644)
 		if err != nil {
 			return err
 		}
@@ -99,7 +100,7 @@ func UpdatePAC(c *Config) error {
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile("resources/pac.js", []byte(abp), 0644)
+	err = os.WriteFile("resources/pac.js", []byte(abp), 0644)
 	if err != nil {
 		return err
 	}
@@ -107,7 +108,7 @@ func UpdatePAC(c *Config) error {
 }
 
 func handle(w http.ResponseWriter, r *http.Request) {
-	content, err := ioutil.ReadFile("resources/pac.js")
+	content, err := os.ReadFile("resources/pac.js")
 	if err != nil {
 		w.WriteHeader(500)
 		w.Write(nil)

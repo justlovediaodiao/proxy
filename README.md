@@ -4,6 +4,7 @@
 proxy is a tool to set os proxy setting, with support for [Proxy Auto Config](https://en.wikipedia.org/wiki/Proxy_auto-config).
 it makes a pac file and set system proxy to pac/http/socks mode. **it is not a proxy server.**
 
+support Windows, MacOS and Ubuntu Desktop.
 
 ### config
 

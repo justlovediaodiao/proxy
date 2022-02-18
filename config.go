@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 )
 
 // Config define
@@ -30,7 +30,7 @@ func getProxyURL(protocol string, host string, port int) (string, error) {
 
 // GetConfig read config from file.
 func GetConfig() (*Config, error) {
-	content, err := ioutil.ReadFile("resources/config.json")
+	content, err := os.ReadFile("resources/config.json")
 	if err != nil {
 		return nil, err
 	}
