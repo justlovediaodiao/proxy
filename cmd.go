@@ -11,6 +11,7 @@ func cmdGlobal() {
 	c, err := GetConfig()
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
 	if err = SetGlobal(c); err != nil {
 		fmt.Println(err)
@@ -44,6 +45,7 @@ func cmdPAC() {
 	c, err := GetConfig()
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
 	if err = SetPAC(c); err != nil {
 		fmt.Println(err)
@@ -90,6 +92,7 @@ func cmdUpdate() {
 	c, err := GetConfig()
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
 	if err = UpdatePAC(c); err != nil {
 		fmt.Println(err)
