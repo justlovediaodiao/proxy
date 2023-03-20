@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -36,6 +37,7 @@ func StartProxy(cmd string) error {
 
 func execute(name string, args ...string) error {
 	var cmd = exec.Command(name, args...)
-	_, err := cmd.Output()
-	return err
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
 }
