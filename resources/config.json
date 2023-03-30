@@ -4,5 +4,5 @@
     "protocol": "socks5",
     "pac_host": "127.0.0.1",
     "pac_port": 1081,
-    "proxy_command": ""
+    "proxy_commands": []
 }

@@ -8,13 +8,13 @@ import (
 
 // Config define
 type Config struct {
-	Host         string `json:"host"`
-	Port         int    `json:"port"`
-	Protocol     string `json:"protocol"`
-	PACHost      string `json:"pac_host"`
-	PACPort      int    `json:"pac_port"`
-	ProxyCommand string `json:"proxy_command"`
-	ProxyURL     string
+	Host          string   `json:"host"`
+	Port          int      `json:"port"`
+	Protocol      string   `json:"protocol"`
+	PACHost       string   `json:"pac_host"`
+	PACPort       int      `json:"pac_port"`
+	ProxyCommands []string `json:"proxy_commands"`
+	ProxyURL      string
 }
 
 func getProxyURL(protocol string, host string, port int) (string, error) {
