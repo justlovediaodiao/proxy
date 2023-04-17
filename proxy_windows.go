@@ -15,7 +15,7 @@ func SetGlobal(c *Config) error {
 	} else if strings.HasPrefix(c.Protocol, "socks") {
 		addr = fmt.Sprintf("socks=%s:%d", c.Host, c.Port)
 	}
-	return execute("resources/sysproxy.exe", "global", addr)
+	return execute("resources/sysproxy.exe", "global", addr, "192.168.*;10.*;172.16.*;172.17.*;172.18.*;172.19.*;172.20.*;172.21.*;172.22.*;172.23.*;172.24.*;172.25.*;172.26.*;172.27.*;172.28.*;172.29.*;172.30.*;172.31.*")
 }
 
 // SetPAC set os proxy to pac.
