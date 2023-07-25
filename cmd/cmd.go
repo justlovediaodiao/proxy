@@ -7,20 +7,22 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/justlovediaodiao/proxy"
 )
 
 func cmdGlobal(n int) {
-	c, err := GetConfig()
+	c, err := proxy.GetConfig()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	if err = SetGlobal(c); err != nil {
+	if err = proxy.SetGlobal(c); err != nil {
 		fmt.Println(err)
 		return
 	}
-	defer Reset()
-	onExit(Reset)
+	defer proxy.Reset()
+	onExit(proxy.Reset)
 	fmt.Println("proxy set to global mode")
 
 	var cmd string
@@ -29,7 +31,7 @@ func cmdGlobal(n int) {
 	}
 	if cmd != "" {
 		fmt.Println("start proxy")
-		if err = StartProxy(cmd); err != nil {
+		if err = proxy.StartProxy(cmd); err != nil {
 			fmt.Println(err)
 		}
 	} else {
@@ -48,17 +50,17 @@ func onExit(f func() error) {
 }
 
 func cmdPAC(n int) {
-	c, err := GetConfig()
+	c, err := proxy.GetConfig()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	if err = SetPAC(c); err != nil {
+	if err = proxy.SetPAC(c); err != nil {
 		fmt.Println(err)
 		return
 	}
-	defer Reset()
-	onExit(Reset)
+	defer proxy.Reset()
+	onExit(proxy.Reset)
 	fmt.Println("proxy set to pac mode")
 
 	var addr = fmt.Sprintf("%s:%d", c.PACHost, c.PACPort)
@@ -71,12 +73,12 @@ func cmdPAC(n int) {
 
 		fmt.Println("start proxy")
 		go func() {
-			ch <- StartProxy(cmd)
+			ch <- proxy.StartProxy(cmd)
 		}()
 
 		fmt.Println("start pac server")
 		go func() {
-			ch <- StartServer(addr)
+			ch <- proxy.StartServer(addr)
 		}()
 		// should not run to here, unless any of above goroutines exit.
 		if err = <-ch; err != nil {
@@ -84,14 +86,14 @@ func cmdPAC(n int) {
 		}
 	} else {
 		fmt.Println("start pac server")
-		if err = StartServer(addr); err != nil {
+		if err = proxy.StartServer(addr); err != nil {
 			fmt.Println(err)
 		}
 	}
 }
 
 func cmdOff() {
-	if err := Reset(); err != nil {
+	if err := proxy.Reset(); err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Println("proxy cleared")
@@ -99,12 +101,12 @@ func cmdOff() {
 }
 
 func cmdUpdate() {
-	c, err := GetConfig()
+	c, err := proxy.GetConfig()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	if err = UpdatePAC(c); err != nil {
+	if err = proxy.UpdatePAC(c); err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Println("pac updated")
