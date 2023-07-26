@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -12,9 +13,9 @@ import (
 )
 
 var (
-	pacStarted   = false
-	proxyStarted = false
-	tipContent   *widget.Label
+	pacStarted    = false
+	proxyProceess *os.Process
+	tipContent    *widget.Label
 )
 
 func main() {
@@ -52,6 +53,10 @@ func show(tip string, e error) {
 }
 
 func off() {
+	if proxyProceess != nil {
+		proxyProceess.Signal(os.Interrupt)
+		proxyProceess = nil
+	}
 	if err := proxy.Reset(); err != nil {
 		show("reset system proxy error", err)
 		return
@@ -69,13 +74,13 @@ func global() {
 		show("set system proxy error", err)
 		return
 	}
-	if !proxyStarted && len(c.ProxyCommands) != 0 {
-		proxyStarted = true
-		go func() {
-			if err := proxy.StartProxy(c.ProxyCommands[0]); err != nil {
-				log.Printf("start proxy server error: %s", err)
-			}
-		}()
+	if proxyProceess == nil && len(c.ProxyCommands) != 0 {
+		p, err := proxy.StartProxyAsync(c.ProxyCommands[0])
+		if err != nil {
+			show("start proxy server error", err)
+			return
+		}
+		proxyProceess = p
 	}
 	show("global mode", nil)
 }
@@ -101,13 +106,13 @@ func pac() {
 		}()
 	}
 
-	if !proxyStarted && len(c.ProxyCommands) != 0 {
-		proxyStarted = true
-		go func() {
-			if err := proxy.StartProxy(c.ProxyCommands[0]); err != nil {
-				log.Printf("start proxy server error: %s", err)
-			}
-		}()
+	if proxyProceess == nil && len(c.ProxyCommands) != 0 {
+		p, err := proxy.StartProxyAsync(c.ProxyCommands[0])
+		if err != nil {
+			show("start proxy server error", err)
+			return
+		}
+		proxyProceess = p
 	}
 	show("pac mode", nil)
 }

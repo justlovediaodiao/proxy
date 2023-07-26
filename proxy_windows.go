@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"syscall"
 )
 
 // SetGlobal set os proxy to http or socks.
@@ -33,6 +34,19 @@ func Reset() error {
 func StartProxy(cmd string) error {
 	var arr = strings.Split(cmd, " ")
 	return execute(arr[0], arr[1:]...)
+}
+
+// StartProxyAsync start proxy process. donot block.
+func StartProxyAsync(cmd string) (*os.Process, error) {
+	var arr = strings.Split(cmd, " ")
+	var c = exec.Command(arr[0], arr[1:]...)
+	c.Stdout = os.Stdout
+	c.Stderr = os.Stderr
+	c.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
+	if err := c.Start(); err != nil {
+		return nil, err
+	}
+	return c.Process, nil
 }
 
 func execute(name string, args ...string) error {

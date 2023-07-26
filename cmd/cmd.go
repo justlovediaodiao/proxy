@@ -21,7 +21,6 @@ func cmdGlobal(n int) {
 		fmt.Println(err)
 		return
 	}
-	defer proxy.Reset()
 	onExit(proxy.Reset)
 	fmt.Println("proxy set to global mode")
 
@@ -59,7 +58,6 @@ func cmdPAC(n int) {
 		fmt.Println(err)
 		return
 	}
-	defer proxy.Reset()
 	onExit(proxy.Reset)
 	fmt.Println("proxy set to pac mode")
 

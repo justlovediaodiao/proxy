@@ -75,6 +75,18 @@ func StartProxy(cmd string) error {
 	return err
 }
 
+// StartProxyAsync start proxy process. donot block.
+func StartProxyAsync(cmd string) (*os.Process, error) {
+	var arr = strings.Split(cmd, " ")
+	var c = exec.Command(arr[0], arr[1:]...)
+	c.Stdout = os.Stdout
+	c.Stderr = os.Stderr
+	if err := c.Start(); err != nil {
+		return nil, err
+	}
+	return c.Process, nil
+}
+
 func reset(networks []string) error {
 	var err error
 	for _, network := range networks {
