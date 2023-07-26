@@ -45,19 +45,27 @@ go build
 ```
 
 - GUI version:
-Run following command based on your os to build:
+C Compiler is needed, see [https://developer.fyne.io/started/](https://developer.fyne.io/started/). Run following command based on your os to build:
 
 ```bash
 go install fyne.io/fyne/v2/cmd/fyne@latest
 
 cd gui
-fyne package -os darwin -icon icon.png     # MacOS
-fyne package -os linux -icon icon.png      # Ubuntu
-fyne package -os windows -icon icon.png    # Windows
+
+# MacOS
+fyne package -os darwin -icon icon.png
+
+# Linux
+fyne package -os linux -icon icon.png
+
+# Windows
+$env:CGO_ENABLED="1"    # Powershell
+fyne package -os windows -icon icon.png
 ```
 
 For windows, with no application icon, you can simply run following command to build:
 ```bash
 cd gui
-go build
+$env:CGO_ENABLED="1"
+go build -ldflags -H=windowsgui
 ```
