@@ -40,32 +40,17 @@ You need to run `update` command to update pac file when:
 
 - Command line version:
 ```bash
-cd cmd
-go build
+go build -o proxy ./cmd
 ```
 
 - GUI version:
-C Compiler is needed, see [https://developer.fyne.io/started/](https://developer.fyne.io/started/). Run following command based on your os to build:
 
-```bash
-go install fyne.io/fyne/v2/cmd/fyne@latest
-
-cd gui
-
-# MacOS
-fyne package -os darwin -icon icon.png
-
-# Linux
-fyne package -os linux -icon icon.png
-
-# Windows
-$env:CGO_ENABLED="1"    # Powershell
-fyne package -os windows -icon icon.png
+GUI version relies on command line version. You need to build Command line version first.
+Gui version is developed by pyqt6. Python 3.11 or higher is needed.
+Pack a GUI App:
 ```
-
-For windows, with no application icon, you can simply run following command to build:
-```bash
 cd gui
-$env:CGO_ENABLED="1"
-go build -ldflags -H=windowsgui
+pip install pyqt6
+pip install pyinstaller
+pyinstaller --windowed app.py
 ```

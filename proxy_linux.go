@@ -76,15 +76,8 @@ func Reset() error {
 	return err
 }
 
-// StartProxy start proxy process. block until process exit.
-func StartProxy(cmd string) error {
-	var arr = strings.Split(cmd, " ")
-	err := execute(arr[0], arr[1:]...)
-	return err
-}
-
-// StartProxyAsync start proxy process. donot block.
-func StartProxyAsync(cmd string) (*os.Process, error) {
+// StartProxy start proxy process.
+func StartProxy(cmd string) (*os.Process, error) {
 	var arr = strings.Split(cmd, " ")
 	var c = exec.Command(arr[0], arr[1:]...)
 	c.Stdout = os.Stdout

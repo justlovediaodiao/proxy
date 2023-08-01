@@ -21,7 +21,8 @@ func cmdGlobal(n int) {
 		fmt.Println(err)
 		return
 	}
-	onExit(proxy.Reset)
+
+	defer proxy.Reset()
 	fmt.Println("proxy set to global mode")
 
 	var cmd string
@@ -30,22 +31,20 @@ func cmdGlobal(n int) {
 	}
 	if cmd != "" {
 		fmt.Println("start proxy")
-		if err = proxy.StartProxy(cmd); err != nil {
+		process, err := proxy.StartProxy(cmd)
+		if err != nil {
 			fmt.Println(err)
+			return
 		}
-	} else {
-		<-(chan int)(nil)
+		defer process.Signal(os.Interrupt)
 	}
+	waitForExit()
 }
 
-func onExit(f func() error) {
+func waitForExit() {
 	var c = make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, os.Kill)
-	go func() {
-		<-c
-		f()
-		os.Exit(0)
-	}()
+	<-c
 }
 
 func cmdPAC(n int) {
@@ -58,36 +57,32 @@ func cmdPAC(n int) {
 		fmt.Println(err)
 		return
 	}
-	onExit(proxy.Reset)
+
+	defer proxy.Reset()
 	fmt.Println("proxy set to pac mode")
 
-	var addr = fmt.Sprintf("%s:%d", c.PACHost, c.PACPort)
 	var cmd string
 	if n < len(c.ProxyCommands) {
 		cmd = c.ProxyCommands[n]
 	}
 	if cmd != "" {
-		var ch = make(chan error, 2)
-
 		fmt.Println("start proxy")
-		go func() {
-			ch <- proxy.StartProxy(cmd)
-		}()
-
-		fmt.Println("start pac server")
-		go func() {
-			ch <- proxy.StartServer(addr)
-		}()
-		// should not run to here, unless any of above goroutines exit.
-		if err = <-ch; err != nil {
+		process, err := proxy.StartProxy(cmd)
+		if err != nil {
 			fmt.Println(err)
+			return
 		}
-	} else {
-		fmt.Println("start pac server")
+		defer process.Signal(os.Interrupt)
+	}
+
+	var addr = fmt.Sprintf("%s:%d", c.PACHost, c.PACPort)
+	fmt.Println("start pac server")
+	go func() {
 		if err = proxy.StartServer(addr); err != nil {
 			fmt.Println(err)
 		}
-	}
+	}()
+	waitForExit()
 }
 
 func cmdOff() {
