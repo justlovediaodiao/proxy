@@ -1,9 +1,9 @@
-import signal
-import subprocess
 import sys
 
 from PyQt6.QtWidgets import (QApplication, QComboBox, QLabel, QVBoxLayout,
                              QWidget)
+
+from proxy import Proxy
 
 
 class MainWindow(QWidget):
@@ -52,33 +52,6 @@ class MainWindow(QWidget):
             self.error("Error: proxy not found")
         except Exception as e:
             self.error(f"Error: {e}")
-
-
-class Proxy:
-
-    def __init__(self):
-        self._process = None
-
-    def _start(self, cmd: list):
-        self._process = subprocess.Popen(cmd)
-
-    def _stop(self):
-        if self._process:
-            self._process.send_signal(signal.SIGINT)
-            self._process.wait()
-            self._process = None
-
-    def off(self):
-        self._stop()
-        subprocess.run(["./proxy", "off"])
-
-    def global_(self):
-        self._stop()
-        self._start(["./proxy", "global"])
-
-    def pac(self):
-        self._stop()
-        self._start(["./proxy", "global"])
 
 
 if __name__ == "__main__":
