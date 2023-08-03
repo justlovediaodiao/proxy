@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"syscall"
 
 	"github.com/justlovediaodiao/proxy"
 )
@@ -43,7 +44,7 @@ func cmdGlobal(n int) {
 
 func waitForExit() {
 	var c = make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt, os.Kill)
+	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
 	<-c
 }
 

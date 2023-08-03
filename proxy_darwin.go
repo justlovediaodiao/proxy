@@ -14,10 +14,6 @@ func SetGlobal(c *Config) error {
 	if err != nil {
 		return err
 	}
-	err = reset(networks)
-	if err != nil {
-		return nil
-	}
 	for _, network := range networks {
 		if c.Protocol == "http" {
 			err = execute("networksetup", "-setwebproxy", network, c.Host, strconv.Itoa(c.Port))
@@ -45,10 +41,6 @@ func SetPAC(c *Config) error {
 	if err != nil {
 		return err
 	}
-	err = reset(networks)
-	if err != nil {
-		return nil
-	}
 	var url = fmt.Sprintf("http://%s:%d", c.PACHost, c.PACPort)
 	for _, network := range networks {
 		err = execute("networksetup", "-setautoproxyurl", network, url)
@@ -65,23 +57,6 @@ func Reset() error {
 	if err != nil {
 		return err
 	}
-	return reset(networks)
-}
-
-// StartProxy start proxy process. donot block.
-func StartProxy(cmd string) (*os.Process, error) {
-	var arr = strings.Split(cmd, " ")
-	var c = exec.Command(arr[0], arr[1:]...)
-	c.Stdout = os.Stdout
-	c.Stderr = os.Stderr
-	if err := c.Start(); err != nil {
-		return nil, err
-	}
-	return c.Process, nil
-}
-
-func reset(networks []string) error {
-	var err error
 	for _, network := range networks {
 		err = execute("networksetup", "-setautoproxystate", network, "off")
 		if err != nil {
@@ -101,6 +76,18 @@ func reset(networks []string) error {
 		}
 	}
 	return nil
+}
+
+// StartProxy start proxy process. donot block.
+func StartProxy(cmd string) (*os.Process, error) {
+	var arr = strings.Split(cmd, " ")
+	var c = exec.Command(arr[0], arr[1:]...)
+	c.Stdout = os.Stdout
+	c.Stderr = os.Stderr
+	if err := c.Start(); err != nil {
+		return nil, err
+	}
+	return c.Process, nil
 }
 
 func listNetwork() ([]string, error) {

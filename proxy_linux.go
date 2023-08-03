@@ -10,10 +10,6 @@ import (
 
 // SetGlobal set os proxy to http or socks.
 func SetGlobal(c *Config) error {
-	err := Reset()
-	if err != nil {
-		return nil
-	}
 	if c.Protocol == "http" {
 		err = execute("gsettings", "set", "org.gnome.system.proxy.http", "host", c.Host)
 		if err != nil {
@@ -54,10 +50,6 @@ func SetGlobal(c *Config) error {
 
 // SetPAC set os proxy to pac.
 func SetPAC(c *Config) error {
-	err := Reset()
-	if err != nil {
-		return nil
-	}
 	var url = fmt.Sprintf("http://%s:%d", c.PACHost, c.PACPort)
 	err = execute("gsettings", "set", "org.gnome.system.proxy", "autoconfig-url", url)
 	if err != nil {

@@ -52,5 +52,6 @@ cd gui
 pip install pyqt6
 pip install pyinstaller
 pyinstaller -w app.py
+cp -r ../resource ./gui/dist/app/
 ```
 Packed app is in `gui/dist/app`.
