@@ -16,6 +16,7 @@ class MainWindow(QWidget):
         self.combo_box.addItem("Off")
         self.combo_box.addItem("Global")
         self.combo_box.addItem("Pac")
+        self.combo_box.setCurrentText("Proxy Option")
         self.combo_box.currentTextChanged.connect(self.on_combo_box_changed)
 
         self.label = QLabel(self)

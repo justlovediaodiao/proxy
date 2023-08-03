@@ -38,18 +38,21 @@ class Proxy:
     def _reset(self):
         if self._state != 'off':
             reset()
-            self._state = 'off'
 
     def global_(self):
         self._reset()
         set_global(self.config)
+        self._stat = 'on'
         self._start_proxy()
 
     def pac(self):
         self._reset()
         set_pac(self.config)
+        self._state = 'on'
         self._start_pac()
         self._start_proxy()
 
     def off(self):
         self._reset()
+        self._state = 'off'
+        self._stop()
