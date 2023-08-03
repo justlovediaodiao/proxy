@@ -45,12 +45,12 @@ go build -o proxy ./cmd
 
 - GUI version:
 
-GUI version relies on command line version. You need to build Command line version first.
 Gui version is developed by pyqt6. Python 3.11 or higher is needed.
 Pack a GUI App:
 ```
 cd gui
 pip install pyqt6
 pip install pyinstaller
-pyinstaller --windowed app.py
+pyinstaller -w app.py
 ```
+Packed app is in `gui/dist/app`.
