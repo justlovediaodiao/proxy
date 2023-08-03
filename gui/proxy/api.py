@@ -7,9 +7,16 @@ from .proxy import reset, set_global, set_pac, start_proxy
 class Proxy:
 
     def __init__(self):
-        self.config = get_config()
+        self._config = None
         self._proxy = None
         self._pac = None
+        self._state = ''
+
+    @property
+    def config(self):
+        if not self._config:
+            self._config = get_config()
+        return self._config
 
     def _start_proxy(self):
         if self.config.proxy_commands and not self._proxy:
@@ -26,16 +33,23 @@ class Proxy:
             self._proxy = None
         if self._pac:
             self._pac.shutdown()
+            self._pac = None
+
+    def _reset(self):
+        if self._state != 'off':
+            reset()
+            self._state = 'off'
 
     def global_(self):
+        self._reset()
         set_global(self.config)
         self._start_proxy()
 
     def pac(self):
+        self._reset()
         set_pac(self.config)
         self._start_pac()
         self._start_proxy()
 
     def off(self):
-        reset()
-        self._stop()
+        self._reset()

@@ -16,7 +16,7 @@ class MainWindow(QWidget):
         self.combo_box.addItem("Off")
         self.combo_box.addItem("Global")
         self.combo_box.addItem("Pac")
-        self.combo_box.currentIndexChanged.connect(self.on_combo_box_changed)
+        self.combo_box.currentTextChanged.connect(self.on_combo_box_changed)
 
         self.label = QLabel(self)
 
@@ -35,8 +35,7 @@ class MainWindow(QWidget):
         self.label.setText(msg)
         self.label.setStyleSheet("color: red")
 
-    def on_combo_box_changed(self, index):
-        text = self.combo_box.currentText()
+    def on_combo_box_changed(self, text):
         try:
             match text:
                 case "Off":
@@ -52,11 +51,17 @@ class MainWindow(QWidget):
             self.error("Error: proxy not found")
         except Exception as e:
             self.error(f"Error: {e}")
+    
+    def on_exit(self):
+        try:
+            self.proxy.off()
+        except:
+            pass
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
-    app.aboutToQuit.connect(window.proxy.off)
+    app.aboutToQuit.connect(window.on_exit)
     sys.exit(app.exec())
