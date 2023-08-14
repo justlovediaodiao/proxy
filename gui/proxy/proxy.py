@@ -8,6 +8,8 @@ _creation_flags = 0
 
 if sys.platform == 'win32':
 
+    from . import sysproxy
+
     _creation_flags = subprocess.CREATE_NO_WINDOW
 
     def set_global(c: Config):
@@ -15,14 +17,15 @@ if sys.platform == 'win32':
             addr = f'{c.host}:{c.port}'
         elif c.protocol.startswith('socks'):
             addr = f'socks={c.host}:{c.port}'
-        execute('resources/sysproxy.exe', 'global', addr, '<local>;192.168.*;10.*;172.16.*;172.17.*;172.18.*;172.19.*;172.20.*;172.21.*;172.22.*;172.23.*;172.24.*;172.25.*;172.26.*;172.27.*;172.28.*;172.29.*;172.30.*;172.31.*')
+        
+        sysproxy.set_global(addr, '<local>;192.168.*;10.*;172.16.*;172.17.*;172.18.*;172.19.*;172.20.*;172.21.*;172.22.*;172.23.*;172.24.*;172.25.*;172.26.*;172.27.*;172.28.*;172.29.*;172.30.*;172.31.*')
 
     def set_pac(c: Config):
         addr = f'http://{c.host}:{c.port}/'
-        execute('resources/sysproxy.exe', 'pac', addr)
+        sysproxy.set_pac(addr)
 
     def reset():
-        execute('resources/sysproxy.exe', 'set', '1', '-', '-', '-')
+        sysproxy.reset()
 
 
 if sys.platform == 'darwin':
