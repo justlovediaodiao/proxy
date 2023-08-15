@@ -112,6 +112,21 @@ def set_pac(proxy_url: str):
 
 def _set_system_proxy(opl: InternetPerConnOptionList):
     internet_set_option = ctypes.windll.Wininet.InternetSetOptionA
-    internet_set_option(None, InternetOption.PerConnectionOption, ctypes.pointer(opl), ctypes.sizeof(opl))
-    internet_set_option(None, InternetOption.ProxySettingsChanged, None, 0)
-    internet_set_option(None, InternetOption.Refresh, None, 0)
+    r = internet_set_option(None, InternetOption.PerConnectionOption, ctypes.pointer(opl), ctypes.sizeof(opl))
+    _handle_error(r)
+    r = internet_set_option(None, InternetOption.ProxySettingsChanged, None, 0)
+    _handle_error(r)
+    r = internet_set_option(None, InternetOption.Refresh, None, 0)
+    _handle_error(r)
+
+
+def _handle_error(r: int):
+    if r == 0:
+        return
+    code = ctypes.get_last_error()
+    err = ctypes.FormatError(code)
+    e = OSError()
+    e.errno = code
+    e.winerror = code
+    e.strerror = err
+    raise e
