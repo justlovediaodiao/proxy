@@ -43,7 +43,7 @@ class InternetConnOption(ctypes.Structure):
 def reset():
     op = InternetConnOption(
         dwOption=InternetPerConnOption.Flags,
-        dwValue=InternetPerConnFlags.AutoDetect | InternetPerConnFlags.Direct
+        dwValue=InternetPerConnFlags.Direct
     )
 
     opl = InternetPerConnOptionList(
@@ -51,7 +51,7 @@ def reset():
         pszConnection=None,
         dwOptionCount=1,
         dwOptionError=0,
-        pOptions=ctypes.pointer(op)
+        pOptions=ctypes.cast(ctypes.pointer(op), ctypes.c_void_p)
     )
 
     _set_system_proxy(opl)
@@ -65,20 +65,22 @@ def set_global(proxy: str, bypass: str):
 
     op1 = InternetConnOption(
         dwOption=InternetPerConnOption.ProxyServer,
-        dwValue=ctypes.c_char_p(proxy.encode())
+        dwValue=ctypes.cast(ctypes.c_char_p(proxy.encode()), ctypes.c_void_p)
     )
 
     op2 = InternetConnOption(
         dwOption=InternetPerConnOption.ProxyBypass,
-        dwValue=ctypes.c_char_p(bypass.encode())
+        dwValue=ctypes.cast(ctypes.c_char_p(bypass.encode()), ctypes.c_void_p)
     )
+
+    ops = (InternetConnOption * 3)(op0, op1, op2)
 
     opl = InternetPerConnOptionList(
         dwSize=ctypes.sizeof(InternetPerConnOptionList),
         pszConnection=None,
         dwOptionCount=3,
         dwOptionError=0,
-        pOptions=ctypes.pointer((InternetConnOption * 3)(op0, op1, op2))
+        pOptions=ctypes.cast(ctypes.pointer(ops), ctypes.c_void_p)
     )
 
     _set_system_proxy(opl)
@@ -92,15 +94,17 @@ def set_pac(proxy_url: str):
 
     op1 = InternetConnOption(
         dwOption=InternetPerConnOption.AutoConfigUrl,
-        dwValue=ctypes.c_char_p(proxy_url.encode())
+        dwValue=ctypes.cast(ctypes.c_char_p(proxy_url.encode()), ctypes.c_void_p)
     )
+
+    ops = (InternetConnOption * 2)(op0, op1)
 
     opl = InternetPerConnOptionList(
         dwSize=ctypes.sizeof(InternetPerConnOptionList),
         pszConnection=None,
         dwOptionCount=2,
         dwOptionError=0,
-        pOptions=ctypes.pointer((InternetConnOption * 2)(op0, op1))
+        pOptions=ctypes.cast(ctypes.pointer(ops), ctypes.c_void_p)
     )
 
     _set_system_proxy(opl)
@@ -108,6 +112,6 @@ def set_pac(proxy_url: str):
 
 def _set_system_proxy(opl: InternetPerConnOptionList):
     internet_set_option = ctypes.windll.Wininet.InternetSetOptionA
-    internet_set_option(None, InternetOption.PerConnectionOption, opl, ctypes.sizeof(opl))
+    internet_set_option(None, InternetOption.PerConnectionOption, ctypes.pointer(opl), ctypes.sizeof(opl))
     internet_set_option(None, InternetOption.ProxySettingsChanged, None, 0)
     internet_set_option(None, InternetOption.Refresh, None, 0)

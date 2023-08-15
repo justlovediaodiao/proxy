@@ -39,8 +39,18 @@ You need to run `update` command to update pac file when:
 ## Build
 
 - Command line version:
+
+Command line version is developed by go. Go 1.21 or higher is needed. Build:
+
 ```bash
 go build -o proxy ./cmd
+```
+
+On windows, CGO is needed. Install [MinGW64](https://github.com/niXman/mingw-builds-binaries/releases) and add `mingw64/bin` to enviroment path. Build:
+
+```bash
+$env:CGO_ENABLED=1  # powershell
+go build -o proxy.exe ./cmd
 ```
 
 - GUI version:
