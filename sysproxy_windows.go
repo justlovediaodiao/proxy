@@ -104,7 +104,7 @@ func setGlobal(proxy string, bypass string) error {
 		dwOptionError: 0,
 		pOptions:      uintptr(unsafe.Pointer(&ops)),
 	}
-	opl.dwSize = uint32(uintptr(unsafe.Pointer(&opl)))
+	opl.dwSize = uint32(unsafe.Sizeof(&opl))
 
 	return setSystemProxy(&opl)
 }
@@ -146,16 +146,16 @@ func setSystemProxy(opl *internetPerConnOptionList) error {
 	fn := lib.MustFindProc("InternetSetOptionA")
 	// converting pointer to uintptr is safe when syscall. referenced object is retained and not moved until the syscall completes.
 	// see https://pkg.go.dev/unsafe#Pointer
-	_, _, err := fn.Call(0, uintptr(internettOptionPerConnectionOption), uintptr(unsafe.Pointer(opl)), unsafe.Sizeof(*opl))
-	if err.(syscall.Errno) != 0 {
+	_, _, err := syscall.SyscallN(fn.Addr(), 0, uintptr(internettOptionPerConnectionOption), uintptr(unsafe.Pointer(opl)), unsafe.Sizeof(*opl))
+	if err != 0 {
 		return err
 	}
-	_, _, err = fn.Call(0, uintptr(internettOptionProxySettingsChanged), 0, 0)
-	if err.(syscall.Errno) != 0 {
+	_, _, err = syscall.SyscallN(fn.Addr(), 0, uintptr(internettOptionProxySettingsChanged), 0, 0)
+	if err != 0 {
 		return err
 	}
-	_, _, err = fn.Call(0, uintptr(internettOptionRefresh), 0, 0)
-	if err.(syscall.Errno) != 0 {
+	_, _, err = syscall.SyscallN(fn.Addr(), 0, uintptr(internettOptionRefresh), 0, 0)
+	if err != 0 {
 		return err
 	}
 	return nil
