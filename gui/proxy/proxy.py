@@ -86,7 +86,7 @@ if sys.platform == 'linux':
 
 
 def execute(*args: str):
-        subprocess.run(' '.join(args), stdout=subprocess.PIPE, stderr=subprocess.PIPE, creationflags=_creation_flags)
+        subprocess.run(' '.join(args), creationflags=_creation_flags)
 
 def start_proxy(cmd: str) -> subprocess.Popen:
-    return subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, creationflags=_creation_flags)
+    return subprocess.Popen(cmd, creationflags=_creation_flags)

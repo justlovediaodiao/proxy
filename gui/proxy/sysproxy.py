@@ -121,7 +121,7 @@ def _set_system_proxy(opl: InternetPerConnOptionList):
 
 
 def _handle_error(r: int):
-    if r == 0:
+    if r == 1:
         return
     code = ctypes.get_last_error()
     err = ctypes.FormatError(code)
