@@ -1,5 +1,3 @@
-using System;
-
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using gui_net.ViewModels;
@@ -12,22 +10,12 @@ namespace gui_net;
 /// </summary>
 public class ViewLocator : IDataTemplate
 {
-    public Control? Build(object? param)
+    public Control? Build(object? param) => param switch
     {
-        if (param is null)
-            return null;
+        null => null,
+        MainWindowViewModel => new MainWindow(),
+        _ => new TextBlock { Text = $"Not Found: {param.GetType().FullName!.Replace("ViewModel", "View", StringComparison.Ordinal)}" }
+    };
 
-        if (param is MainWindowViewModel)
-        {
-            return new MainWindow();
-        }
-
-        var name = param.GetType().FullName!.Replace("ViewModel", "View", StringComparison.Ordinal);
-        return new TextBlock { Text = "Not Found: " + name };
-    }
-
-    public bool Match(object? data)
-    {
-        return data is ViewModelBase;
-    }
+    public bool Match(object? data) => data is ViewModelBase;
 }

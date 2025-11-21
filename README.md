@@ -56,20 +56,20 @@ go build -o proxy.exe ./cmd
 ### GUI version:
 
 
-- pyqt
-Python 3.11 or higher is needed.
-Pack a GUI App:
+- pyqt version
+
+Python 3.11 or higher is needed. Build:
 ```
-cd gui
+cd gui-qt
 pip install pyqt6
 pip install pyinstaller
 pyinstaller -w app.py
-cp -r ../resource ./gui/dist/app/
 ```
-Packed app is in `gui/dist/app`.
 
-- dotnet
+- dotnet version
+
 dotnet 9 is needed. Build:
 ```
+cd gui-net
 dotnet publish -p:PublishAot=true
 ```
