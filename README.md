@@ -38,7 +38,7 @@ You need to run `update` command to update pac file when:
 
 ## Build
 
-- Command line version:
+### Command line version:
 
 Command line version is developed by go. Go 1.21 or higher is needed. Build:
 
@@ -53,9 +53,11 @@ $env:CGO_ENABLED=1  # powershell
 go build -o proxy.exe ./cmd
 ```
 
-- GUI version:
+### GUI version:
 
-Gui version is developed by pyqt6. Python 3.11 or higher is needed.
+
+- pyqt
+Python 3.11 or higher is needed.
 Pack a GUI App:
 ```
 cd gui
@@ -65,3 +67,9 @@ pyinstaller -w app.py
 cp -r ../resource ./gui/dist/app/
 ```
 Packed app is in `gui/dist/app`.
+
+- dotnet
+dotnet 9 is needed. Build:
+```
+dotnet publish -p:PublishAot=true
+```
