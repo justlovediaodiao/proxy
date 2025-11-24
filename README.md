@@ -68,8 +68,8 @@ pyinstaller -w app.py
 
 - dotnet version
 
-dotnet 9 is needed. Build:
+dotnet 10 is needed. Build:
 ```
 cd gui-net
-dotnet publish -p:PublishAot=true
+dotnet publish
 ```
