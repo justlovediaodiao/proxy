@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using gui_net.Models;
+using gui_net.Serialization;
 
 namespace gui_net.Services;
 
@@ -27,7 +28,7 @@ public class ProxyService
         if (File.Exists(configPath))
         {
             var json = File.ReadAllText(configPath);
-            _config = JsonSerializer.Deserialize<Config>(json);
+            _config = JsonSerializer.Deserialize(json, JsonContext.Default.Config);
         }
         else
         {

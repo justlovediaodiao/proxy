@@ -7,7 +7,7 @@
         Width="300" Height="200"
         x:Class="gui_net.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="avares://gui-net/Assets/avalonia-logo.ico"
         Title="Proxy">
 
     <Design.DataContext>
