@@ -1,5 +1,5 @@
 ﻿using Avalonia;
-using Avalonia.ReactiveUI;
+
 using gui_net;
 
 BuildAvaloniaApp()
@@ -9,6 +9,4 @@ BuildAvaloniaApp()
 static AppBuilder BuildAvaloniaApp()
     => AppBuilder.Configure<App>()
         .UsePlatformDetect()
-        .WithInterFont()
-        .LogToTrace()
-        .UseReactiveUI();
+        .LogToTrace();

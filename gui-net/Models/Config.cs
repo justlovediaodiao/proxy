@@ -2,6 +2,13 @@ using System.Text.Json.Serialization;
 
 namespace gui_net.Models;
 
+[JsonSourceGenerationOptions(
+    PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
+    WriteIndented = true
+)]
+[JsonSerializable(typeof(Config))]
+public partial class JsonContext : JsonSerializerContext;
+
 public class Config
 {
     [JsonPropertyName("host")]
