@@ -18,11 +18,12 @@ type Config struct {
 }
 
 func getProxyURL(protocol string, host string, port int) (string, error) {
-	if protocol == "http" {
+	switch protocol {
+	case "http":
 		return fmt.Sprintf("PROXY %s:%d;DIRECT", host, port), nil
-	} else if protocol == "socks" {
+	case "socks":
 		return fmt.Sprintf("SOCKS %s:%d;DIRECT", host, port), nil
-	} else if protocol == "socks5" {
+	case "socks5":
 		return fmt.Sprintf("SOCKS5 %s:%d;DIRECT", host, port), nil
 	}
 	return "", fmt.Errorf("unspported proxy protocol %s", protocol)

@@ -37,7 +37,7 @@ func cmdGlobal(n int) {
 			fmt.Println(err)
 			return
 		}
-		defer process.Signal(os.Interrupt)
+		defer process.Kill()
 	}
 	waitForExit()
 }
@@ -73,7 +73,7 @@ func cmdPAC(n int) {
 			fmt.Println(err)
 			return
 		}
-		defer process.Signal(os.Interrupt)
+		defer process.Kill()
 	}
 
 	var addr = fmt.Sprintf("%s:%d", c.PACHost, c.PACPort)
