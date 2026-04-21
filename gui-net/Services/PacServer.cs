@@ -7,25 +7,24 @@ public class PacServer
 {
     private HttpListener? _listener;
     private Thread? _serverThread;
+    private string? _pacContent;
     private bool _running;
 
     public void Start(string host, int port)
     {
         Stop();
 
+        var pacPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "resources", "pac.js");
+        if (!File.Exists(pacPath))
+            throw new FileNotFoundException($"PAC file not found: {pacPath}", pacPath);
+
+        _pacContent = File.ReadAllText(pacPath);
+
         _listener = new HttpListener();
         // HttpListener requires admin rights for some prefixes, but localhost usually works if not reserved.
         // Using + or * might require admin.
         _listener.Prefixes.Add($"http://{host}:{port}/");
-        try
-        {
-            _listener.Start();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to start PAC server: {ex.Message}");
-            return;
-        }
+        _listener.Start();
 
         _running = true;
         _serverThread = new Thread(Listen)
@@ -41,6 +40,7 @@ public class PacServer
         _listener?.Stop();
         _listener?.Close();
         _listener = null;
+        _pacContent = null;
     }
 
     private void Listen()
@@ -68,11 +68,7 @@ public class PacServer
         try
         {
             var response = context.Response;
-            var pacPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "resources", "pac.js");
-
-            var pacContent = File.Exists(pacPath)
-                ? File.ReadAllText(pacPath)
-                : "function FindProxyForURL(url, host) { return 'DIRECT'; }";
+            var pacContent = _pacContent ?? throw new InvalidOperationException("PAC content has not been loaded.");
 
             var buffer = Encoding.UTF8.GetBytes(pacContent);
             response.ContentLength64 = buffer.Length;

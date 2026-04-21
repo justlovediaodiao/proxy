@@ -24,7 +24,7 @@ public class Config
     public string PacHost { get; set; } = "127.0.0.1";
 
     [JsonPropertyName("pac_port")]
-    public int PacPort { get; set; } = 1080;
+    public int PacPort { get; set; } = 1081;
 
     [JsonPropertyName("proxy_commands")]
     public string[] ProxyCommands { get; set; } = [];
