@@ -55,21 +55,8 @@ go build -o proxy.exe ./cmd
 
 ### GUI version:
 
-
-- pyqt version
-
-Python 3.11 or higher is needed. Build:
-```
-cd gui-qt
-pip install pyqt6
-pip install pyinstaller
-pyinstaller -w app.py
-```
-
-- dotnet version
-
 dotnet 10 is needed. Build:
 ```
-cd gui-net
+cd gui
 dotnet publish
 ```
