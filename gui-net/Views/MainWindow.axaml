@@ -84,12 +84,27 @@
                         Spacing="8"
                         ToolTip.Tip="{Binding StatusDetail}"
                         ToolTip.IsEnabled="{Binding HasStatusDetail}">
-                <Ellipse Width="10"
-                         Height="10"
+                <Ellipse Width="12"
+                         Height="12"
                          Fill="{Binding StatusColor}"/>
                 <TextBlock Text="{Binding StatusMessage}"
                            Foreground="#344054"
-                           VerticalAlignment="Center"/>
+                           VerticalAlignment="Center"
+                           IsVisible="{Binding !IsApplyingStatus}"/>
+                <Panel Width="16"
+                       Height="16"
+                       IsVisible="{Binding IsApplyingStatus}">
+                    <Path Data="M 8,1 A 7,7 0 1 1 3.05,3.05"
+                          Stroke="{Binding StatusColor}"
+                          StrokeThickness="2"
+                          StrokeLineCap="Round"
+                          Fill="Transparent"
+                          RenderTransformOrigin="50%,50%">
+                        <Path.RenderTransform>
+                            <RotateTransform Angle="{Binding SpinnerAngle}"/>
+                        </Path.RenderTransform>
+                    </Path>
+                </Panel>
             </StackPanel>
 
             <TextBlock Grid.Row="1"

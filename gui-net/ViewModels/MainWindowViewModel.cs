@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Avalonia.Threading;
 using gui_net.Services;
 
 namespace gui_net.ViewModels;
@@ -6,6 +7,7 @@ namespace gui_net.ViewModels;
 public partial class MainWindowViewModel : ObservableObject
 {
     private readonly ProxyService _proxyService;
+    private readonly DispatcherTimer _spinnerTimer;
 
     private bool _isApplying;
     private int _applyVersion;
@@ -23,6 +25,12 @@ public partial class MainWindowViewModel : ObservableObject
     private bool _controlsEnabled = true;
 
     [ObservableProperty]
+    private bool _isApplyingStatus;
+
+    [ObservableProperty]
+    private double _spinnerAngle;
+
+    [ObservableProperty]
     private string _statusMessage = "Off";
 
     [ObservableProperty]
@@ -34,6 +42,11 @@ public partial class MainWindowViewModel : ObservableObject
     public MainWindowViewModel()
     {
         _proxyService = new ProxyService();
+        _spinnerTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromMilliseconds(16)
+        };
+        _spinnerTimer.Tick += (_, _) => SpinnerAngle = (SpinnerAngle + 8) % 360;
     }
 
     public bool HasStatusDetail => !string.IsNullOrWhiteSpace(StatusDetail);
@@ -73,6 +86,8 @@ public partial class MainWindowViewModel : ObservableObject
     private async Task ApplyRequestedModeAsync()
     {
         _isApplying = true;
+        IsApplyingStatus = true;
+        _spinnerTimer.Start();
         ControlsEnabled = false;
 
         try
@@ -88,6 +103,9 @@ public partial class MainWindowViewModel : ObservableObject
         finally
         {
             ControlsEnabled = true;
+            _spinnerTimer.Stop();
+            SpinnerAngle = 0;
+            IsApplyingStatus = false;
             _isApplying = false;
         }
     }
@@ -99,7 +117,7 @@ public partial class MainWindowViewModel : ObservableObject
 
         StatusDetail = null;
         StatusColor = "#D9A300";
-        StatusMessage = enabled ? "Turning on..." : "Turning off...";
+        StatusMessage = String.Empty;
 
         try
         {
