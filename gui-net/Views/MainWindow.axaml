@@ -3,27 +3,129 @@
         xmlns:vm="using:gui_net.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="200"
-        Width="300" Height="200"
+        mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="320"
+        Width="320" Height="220"
+        MinWidth="320" MinHeight="220"
         x:Class="gui_net.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="avares://gui-net/Assets/avalonia-logo.ico"
-        Title="Proxy">
+        Title="Proxy"
+        Background="#E5E7EB">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <StackPanel Margin="20" Spacing="20" VerticalAlignment="Center">
-        <ComboBox ItemsSource="{Binding Modes}"
-                  SelectedItem="{Binding SelectedMode}"
-                  HorizontalAlignment="Stretch"
-                  PlaceholderText="Select Mode"/>
-        
-        <TextBlock Text="{Binding StatusMessage}"
-                   Foreground="{Binding StatusColor}"
-                   HorizontalAlignment="Center"
-                   TextWrapping="Wrap"/>
-    </StackPanel>
+    <Window.Styles>
+        <Style Selector="RadioButton.segment">
+            <Setter Property="MinWidth" Value="72"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Padding" Value="16,0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#D0D5DD"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="#344054"/>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6"
+                            BoxShadow="0 1 3 0 #20000000">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+
+        <Style Selector="RadioButton.segment:checked">
+            <Setter Property="Background" Value="#2563EB"/>
+            <Setter Property="BorderBrush" Value="#2563EB"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+        </Style>
+
+        <Style Selector="RadioButton.segment:pointerover">
+            <Setter Property="BorderBrush" Value="#98A2B3"/>
+        </Style>
+
+        <Style Selector="RadioButton.segment:disabled">
+            <Setter Property="Opacity" Value="0.55"/>
+        </Style>
+    </Window.Styles>
+
+    <!-- Center card with subtle shadow -->
+    <Border HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Width="280"
+            Padding="24"
+            Background="#FFFFFF"
+            CornerRadius="12"
+            BoxShadow="0 4 16 0 #15000000">
+        <Grid RowDefinitions="Auto,Auto,Auto"
+              ColumnDefinitions="Auto,*"
+              RowSpacing="20"
+              ColumnSpacing="20">
+            <TextBlock Grid.Row="0"
+                       Grid.Column="0"
+                       Text="Proxy"
+                       FontSize="22"
+                       FontWeight="SemiBold"
+                       Foreground="#101828"/>
+            <StackPanel Grid.Row="0"
+                        Grid.Column="1"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Spacing="8"
+                        ToolTip.Tip="{Binding StatusDetail}"
+                        ToolTip.IsEnabled="{Binding HasStatusDetail}">
+                <Ellipse Width="10"
+                         Height="10"
+                         Fill="{Binding StatusColor}"/>
+                <TextBlock Text="{Binding StatusMessage}"
+                           Foreground="#344054"
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <TextBlock Grid.Row="1"
+                       Grid.Column="0"
+                       Text="Enable"
+                       VerticalAlignment="Center"
+                       Foreground="#475467"/>
+            <ToggleSwitch Grid.Row="1"
+                          Grid.Column="1"
+                          HorizontalAlignment="Right"
+                          IsChecked="{Binding ProxyEnabled}"
+                          IsEnabled="{Binding ControlsEnabled}"
+                          OffContent=""
+                          OnContent=""/>
+
+            <TextBlock Grid.Row="2"
+                       Grid.Column="0"
+                       Text="Mode"
+                       VerticalAlignment="Center"
+                       Foreground="#475467"/>
+            <StackPanel Grid.Row="2"
+                        Grid.Column="1"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Spacing="8"
+                        IsEnabled="{Binding ControlsEnabled}">
+                <RadioButton Classes="segment"
+                             GroupName="ProxyMode"
+                             Content="PAC"
+                             IsChecked="{Binding PacModeSelected}"/>
+                <RadioButton Classes="segment"
+                             GroupName="ProxyMode"
+                             Content="Global"
+                             IsChecked="{Binding GlobalModeSelected}"/>
+            </StackPanel>
+        </Grid>
+    </Border>
 
 </Window>

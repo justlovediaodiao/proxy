@@ -56,7 +56,7 @@ public class ProxyService
 
     public void Global()
     {
-        Reset(); // Clear previous settings
+        Reset();
         SetGlobal(Config);
         StartProxyProcess();
     }

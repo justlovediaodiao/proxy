@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using gui_net.Services;
 
 namespace gui_net.ViewModels;
@@ -7,52 +6,125 @@ namespace gui_net.ViewModels;
 public partial class MainWindowViewModel : ObservableObject
 {
     private readonly ProxyService _proxyService;
-    [ObservableProperty]
-    private string _selectedMode = "";
+
+    private bool _isApplying;
+    private int _applyVersion;
 
     [ObservableProperty]
-    private string _statusMessage = "Ready";
+    private bool _proxyEnabled;
 
     [ObservableProperty]
-    private string _statusColor = "Black";
+    private bool _pacModeSelected = true;
+
+    [ObservableProperty]
+    private bool _globalModeSelected;
+
+    [ObservableProperty]
+    private bool _controlsEnabled = true;
+
+    [ObservableProperty]
+    private string _statusMessage = "Off";
+
+    [ObservableProperty]
+    private string _statusColor = "#8A8A8A";
+
+    [ObservableProperty]
+    private string? _statusDetail;
 
     public MainWindowViewModel()
     {
         _proxyService = new ProxyService();
-        Modes = new ObservableCollection<string> { "Off", "Global", "Pac" };
     }
 
-    public ObservableCollection<string> Modes { get; }
+    public bool HasStatusDetail => !string.IsNullOrWhiteSpace(StatusDetail);
 
-    partial void OnSelectedModeChanged(string value)
+    partial void OnStatusDetailChanged(string? value)
     {
-        if (string.IsNullOrEmpty(value)) return;
+        OnPropertyChanged(nameof(HasStatusDetail));
+    }
+
+    partial void OnProxyEnabledChanged(bool value)
+    {
+        RequestApply();
+    }
+
+    partial void OnPacModeSelectedChanged(bool value)
+    {
+        if (value && ProxyEnabled)
+            RequestApply();
+    }
+
+    partial void OnGlobalModeSelectedChanged(bool value)
+    {
+        if (value && ProxyEnabled)
+            RequestApply();
+    }
+
+    private void RequestApply()
+    {
+        _applyVersion++;
+
+        if (_isApplying)
+            return;
+
+        _ = ApplyRequestedModeAsync();
+    }
+
+    private async Task ApplyRequestedModeAsync()
+    {
+        _isApplying = true;
+        ControlsEnabled = false;
 
         try
         {
-            switch (value)
+            int handledVersion;
+            do
             {
-                case "Off":
-                    _proxyService.Off();
-                    StatusMessage = "Proxy off";
-                    StatusColor = "Green";
-                    break;
-                case "Global":
-                    _proxyService.Global();
-                    StatusMessage = "Global mode";
-                    StatusColor = "Green";
-                    break;
-                case "Pac":
-                    _proxyService.Pac();
-                    StatusMessage = "Pac mode";
-                    StatusColor = "Green";
-                    break;
+                handledVersion = _applyVersion;
+                await ApplyCurrentModeAsync();
             }
+            while (handledVersion != _applyVersion);
         }
-        catch (Exception ex)
+        finally
         {
-            StatusMessage = $"Error: {ex.Message}";
-            StatusColor = "Red";
+            ControlsEnabled = true;
+            _isApplying = false;
+        }
+    }
+
+    private async Task ApplyCurrentModeAsync()
+    {
+        var enabled = ProxyEnabled;
+        var mode = PacModeSelected ? "Pac" : "Global";
+
+        StatusDetail = null;
+        StatusColor = "#D9A300";
+        StatusMessage = enabled ? "Turning on..." : "Turning off...";
+
+        try
+        {
+            await Task.Run(() =>
+            {
+                if (!enabled)
+                {
+                    _proxyService.Off();
+                    return;
+                }
+
+                if (mode == "Pac")
+                    _proxyService.Pac();
+                else
+                    _proxyService.Global();
+            });
+
+            StatusColor = enabled ? "#16A34A" : "#8A8A8A";
+            StatusMessage = enabled ? "On" : "Off";
+        }
+        catch (Exception e)
+        {
+            StatusMessage = "Error";
+            StatusColor = "#D13438";
+            StatusDetail = e.Message;
         }
     }
 
