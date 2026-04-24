@@ -14,7 +14,7 @@ public class PacServer
     {
         Stop();
 
-        var pacPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "resources", "pac.js");
+        var pacPath = "resources/pac.js";
         if (!File.Exists(pacPath))
             throw new FileNotFoundException($"PAC file not found: {pacPath}", pacPath);
 

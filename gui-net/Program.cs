@@ -1,6 +1,10 @@
 ﻿using Avalonia;
-
 using gui_net;
+using System.IO;
+using System.Reflection;
+
+
+Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 
 BuildAvaloniaApp()
     .StartWithClassicDesktopLifetime(args);

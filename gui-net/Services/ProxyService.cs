@@ -23,17 +23,13 @@ public class ProxyService
 
     private void LoadConfig()
     {
-        var configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "resources", "config.json");
+        var configPath = "resources/config.json";
         if (File.Exists(configPath))
-        {
-            var json = File.ReadAllText(configPath);
-            _config = JsonSerializer.Deserialize(json, JsonContext.Default.Config);
-        }
-        else
-        {
-            _config = new Config();
-        }
+            throw new FileNotFoundException($"PAC file not found: {configPath}", configPath);
 
+
+        var json = File.ReadAllText(configPath);
+        _config = JsonSerializer.Deserialize(json, JsonContext.Default.Config);
         // Derive ProxyUrl
         if (_config != null)
         {
