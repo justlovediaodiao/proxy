@@ -24,8 +24,8 @@ public class ProxyService
     private void LoadConfig()
     {
         var configPath = "resources/config.json";
-        if (File.Exists(configPath))
-            throw new FileNotFoundException($"PAC file not found: {configPath}", configPath);
+        if (!File.Exists(configPath))
+            throw new FileNotFoundException($"Config file not found: {configPath}", configPath);
 
 
         var json = File.ReadAllText(configPath);
