@@ -16,10 +16,10 @@ public partial class MainWindowViewModel : ObservableObject
     private bool _proxyEnabled;
 
     [ObservableProperty]
-    private bool _pacModeSelected = true;
+    private bool _pacModeSelected;
 
     [ObservableProperty]
-    private bool _globalModeSelected;
+    private bool _globalModeSelected = true;
 
     [ObservableProperty]
     private bool _controlsEnabled = true;
