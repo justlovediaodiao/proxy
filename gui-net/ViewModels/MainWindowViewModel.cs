@@ -51,6 +51,8 @@ public partial class MainWindowViewModel : ObservableObject
 
     public bool HasStatusDetail => !string.IsNullOrWhiteSpace(StatusDetail);
 
+    public ProcessLogBuffer Logs => _proxyService.Logs;
+
     partial void OnStatusDetailChanged(string? value)
     {
         OnPropertyChanged(nameof(HasStatusDetail));

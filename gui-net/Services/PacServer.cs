@@ -5,10 +5,16 @@ namespace gui_net.Services;
 
 public class PacServer
 {
+    private readonly ProcessLogBuffer _logs;
     private HttpListener? _listener;
     private Thread? _serverThread;
     private string? _pacContent;
     private bool _running;
+
+    public PacServer(ProcessLogBuffer logs)
+    {
+        _logs = logs;
+    }
 
     public void Start(string host, int port)
     {
@@ -58,7 +64,7 @@ public class PacServer
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"PAC Server error: {ex.Message}");
+                _logs.Append("pac", $"Server error: {ex.Message}");
             }
         }
     }
@@ -78,7 +84,7 @@ public class PacServer
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error processing request: {ex.Message}");
+            _logs.Append("pac", $"Error processing request: {ex.Message}");
         }
     }
 }

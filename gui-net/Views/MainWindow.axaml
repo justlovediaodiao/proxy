@@ -75,7 +75,10 @@
                        Text="Proxy"
                        FontSize="22"
                        FontWeight="SemiBold"
-                       Foreground="#101828"/>
+                       Foreground="#101828"
+                       Cursor="Hand"
+                       ToolTip.Tip="Show proxy logs"
+                       PointerPressed="ProxyTitle_PointerPressed"/>
             <StackPanel Grid.Row="0"
                         Grid.Column="1"
                         Orientation="Horizontal"

@@ -11,6 +11,8 @@ public class ProxyService
     private Process? _proxyProcess;
     private PacServer? _pacServer;
 
+    public ProcessLogBuffer Logs { get; } = new();
+
     public Config Config
     {
         get
@@ -67,6 +69,12 @@ public class ProxyService
 
     private void StartProxyProcess()
     {
+        if (_proxyProcess is { HasExited: true })
+        {
+            _proxyProcess.Dispose();
+            _proxyProcess = null;
+        }
+
         if (Config.ProxyCommands != null && Config.ProxyCommands.Length > 0 && _proxyProcess == null)
         {
             try
@@ -81,33 +89,78 @@ public class ProxyService
                     FileName = fileName,
                     Arguments = args,
                     UseShellExecute = false,
-                    CreateNoWindow = true
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true
                 };
-                _proxyProcess = Process.Start(psi);
+                var process = new Process
+                {
+                    StartInfo = psi,
+                    EnableRaisingEvents = true
+                };
+                process.OutputDataReceived += (_, e) =>
+                {
+                    if (e.Data != null)
+                        Logs.Append("stdout", e.Data);
+                };
+                process.ErrorDataReceived += (_, e) =>
+                {
+                    if (e.Data != null)
+                        Logs.Append("stderr", e.Data);
+                };
+                process.Exited += (_, _) =>
+                {
+                    try
+                    {
+                        Logs.Append("proxy", $"Process exited with code {process.ExitCode}.");
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        Logs.Append("proxy", "Process exited.");
+                    }
+                };
+
+                _proxyProcess = process;
+                if (!process.Start())
+                {
+                    throw new InvalidOperationException("The proxy process could not be started.");
+                }
+
+                Logs.Append("proxy", $"Process started (PID {process.Id}).");
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to start proxy process: {ex.Message}");
+                _proxyProcess?.Dispose();
+                _proxyProcess = null;
+                Logs.Append("proxy", $"Failed to start process: {ex.Message}");
             }
         }
     }
 
     private void StopProxyProcess()
     {
-        if (_proxyProcess != null && !_proxyProcess.HasExited)
+        if (_proxyProcess != null)
         {
             try
             {
-                _proxyProcess.Kill();
+                if (!_proxyProcess.HasExited)
+                {
+                    Logs.Append("proxy", "Stopping process.");
+                    _proxyProcess.Kill();
+                    _proxyProcess.WaitForExit(2_000);
+                }
             }
             catch { }
+            _proxyProcess.Dispose();
             _proxyProcess = null;
         }
     }
 
     private void StartPacServer()
     {
-        _pacServer ??= new PacServer();
+        _pacServer ??= new PacServer(Logs);
         _pacServer.Start(Config.PacHost, Config.PacPort);
     }
 

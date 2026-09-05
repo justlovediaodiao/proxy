@@ -1,0 +1,17 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="gui_net.Views.LogWindow"
+        Width="760" Height="480"
+        MinWidth="480" MinHeight="300"
+        Icon="avares://gui-net/Assets/avalonia-logo.ico"
+        Title="Proxy Logs">
+    <TextBox x:Name="LogTextBox"
+             Margin="12"
+             IsReadOnly="True"
+             AcceptsReturn="True"
+             TextWrapping="NoWrap"
+             FontFamily="Menlo,Consolas,monospace"
+             FontSize="12"
+             ScrollViewer.HorizontalScrollBarVisibility="Auto"
+             ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+</Window>
