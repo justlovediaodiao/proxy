@@ -1,13 +1,12 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Avalonia.Threading;
+using CommunityToolkit.Mvvm.ComponentModel;
 using gui_net.Services;
+using Avalonia.Threading;
 
 namespace gui_net.ViewModels;
 
 public partial class MainWindowViewModel : ObservableObject
 {
     private readonly ProxyService _proxyService;
-    private readonly DispatcherTimer _spinnerTimer;
 
     private bool _isApplying;
     private int _applyVersion;
@@ -16,19 +15,16 @@ public partial class MainWindowViewModel : ObservableObject
     private bool _proxyEnabled;
 
     [ObservableProperty]
-    private bool _pacModeSelected;
-
-    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PacModeSelected))]
     private bool _globalModeSelected = true;
+
+    public bool PacModeSelected => !GlobalModeSelected;
 
     [ObservableProperty]
     private bool _controlsEnabled = true;
 
     [ObservableProperty]
     private bool _isApplyingStatus;
-
-    [ObservableProperty]
-    private double _spinnerAngle;
 
     [ObservableProperty]
     private string _statusMessage = "Off";
@@ -42,12 +38,21 @@ public partial class MainWindowViewModel : ObservableObject
     public MainWindowViewModel()
     {
         _proxyService = new ProxyService();
-        _spinnerTimer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromMilliseconds(16)
-        };
-        _spinnerTimer.Tick += (_, _) => SpinnerAngle = (SpinnerAngle + 8) % 360;
+        _proxyService.ProcessExitedUnexpectedly += OnProxyProcessExited;
     }
+
+    private void OnProxyProcessExited()
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (ProxyEnabled && _proxyService.ProcessFailure is { } message)
+                ShowError(message);
+        });
+    }
+
+    public bool HasError => StatusMessage == "Error";
+
+    partial void OnStatusMessageChanged(string value) => OnPropertyChanged(nameof(HasError));
 
     public bool HasStatusDetail => !string.IsNullOrWhiteSpace(StatusDetail);
 
@@ -63,15 +68,9 @@ public partial class MainWindowViewModel : ObservableObject
         RequestApply();
     }
 
-    partial void OnPacModeSelectedChanged(bool value)
-    {
-        if (value && ProxyEnabled)
-            RequestApply();
-    }
-
     partial void OnGlobalModeSelectedChanged(bool value)
     {
-        if (value && ProxyEnabled)
+        if (ProxyEnabled)
             RequestApply();
     }
 
@@ -89,7 +88,6 @@ public partial class MainWindowViewModel : ObservableObject
     {
         _isApplying = true;
         IsApplyingStatus = true;
-        _spinnerTimer.Start();
         ControlsEnabled = false;
 
         try
@@ -105,8 +103,6 @@ public partial class MainWindowViewModel : ObservableObject
         finally
         {
             ControlsEnabled = true;
-            _spinnerTimer.Stop();
-            SpinnerAngle = 0;
             IsApplyingStatus = false;
             _isApplying = false;
         }
@@ -137,19 +133,31 @@ public partial class MainWindowViewModel : ObservableObject
                     _proxyService.Global();
             });
 
+            if (enabled && _proxyService.ProcessFailure is { } failure)
+            {
+                ShowError(failure);
+                return;
+            }
+
             StatusColor = enabled ? "#16A34A" : "#8A8A8A";
             StatusMessage = enabled ? "On" : "Off";
         }
         catch (Exception e)
         {
-            StatusMessage = "Error";
-            StatusColor = "#D13438";
-            StatusDetail = e.Message;
+            ShowError(e.Message);
         }
+    }
+
+    private void ShowError(string message)
+    {
+        StatusMessage = "Error";
+        StatusColor = "#D13438";
+        StatusDetail = message;
     }
 
     public void OnExit()
     {
+        _proxyService.ProcessExitedUnexpectedly -= OnProxyProcessExited;
         try
         {
             _proxyService.Off();

@@ -1,0 +1,96 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:suki="clr-namespace:SukiUI.Controls;assembly=SukiUI">
+    <Style Selector="suki|SukiMainHost">
+        <Setter Property="Background" Value="{DynamicResource SukiStrongBackground}" />
+    </Style>
+    <Style Selector="suki|GlassCard">
+        <Setter Property="IsOpaque" Value="True" />
+        <Setter Property="CornerRadius" Value="12" />
+    </Style>
+    <Style Selector="TextBlock.secondary">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{DynamicResource SukiLowText}" />
+    </Style>
+    <Style Selector="TextBlock.secondary.error">
+        <Setter Property="Foreground" Value="{DynamicResource ErrorBrush}" />
+    </Style>
+    <Style Selector="Button.status-log">
+        <Setter Property="Width" Value="24" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="MinHeight" Value="24" />
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+    <Style Selector="Button.status-log:pointerover">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="ToggleSwitch.mode-switch">
+        <Setter Property="Width" Value="116" />
+        <Setter Property="Height" Value="34" />
+        <Setter Property="MinWidth" Value="116" />
+        <Setter Property="MinHeight" Value="34" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Name="ModeTrack" CornerRadius="17" Padding="3" BorderThickness="1"
+                        BorderBrush="{DynamicResource SukiBorderBrush}" Background="{DynamicResource SukiGlassCardOpaqueBackground}">
+                    <Grid Name="ModeArea">
+                        <Canvas Name="ModeCanvas" Height="26">
+                            <Border Name="ModeThumb" Width="54" Height="26" CornerRadius="13"
+                                    Background="{DynamicResource SukiPrimaryColor}">
+                                <Border.Transitions>
+                                    <Transitions>
+                                        <DoubleTransition Property="Canvas.Left" Duration="0:0:0.18" Easing="CubicEaseInOut" />
+                                    </Transitions>
+                                </Border.Transitions>
+                                <Grid>
+                                    <ContentPresenter Name="ModeOffLabel" Content="{TemplateBinding OffContent}"
+                                                      TextElement.Foreground="{DynamicResource SukiStrongBackground}"
+                                                      TextElement.FontSize="12" TextElement.FontWeight="SemiBold"
+                                                      HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                                    <ContentPresenter Name="ModeOnLabel" Content="{TemplateBinding OnContent}"
+                                                      TextElement.Foreground="{DynamicResource SukiStrongBackground}"
+                                                      TextElement.FontSize="12" TextElement.FontWeight="SemiBold"
+                                                      HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                                </Grid>
+                            </Border>
+                        </Canvas>
+                        <Grid Name="PART_MovingKnobs" IsHitTestVisible="False" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    <Style Selector="ToggleSwitch.mode-switch /template/ Border#ModeThumb">
+        <Setter Property="Canvas.Left" Value="0" />
+    </Style>
+    <Style Selector="ToggleSwitch.mode-switch /template/ ContentPresenter#ModeOnLabel">
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <Style Selector="ToggleSwitch.mode-switch:checked /template/ Border#ModeThumb">
+        <Setter Property="Canvas.Left" Value="54" />
+    </Style>
+    <Style Selector="ToggleSwitch.mode-switch:checked /template/ ContentPresenter#ModeOffLabel">
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <Style Selector="ToggleSwitch.mode-switch:checked /template/ ContentPresenter#ModeOnLabel">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="ToggleSwitch.mode-switch:focus-visible /template/ Border#ModeTrack">
+        <Setter Property="BorderBrush" Value="{DynamicResource SukiAccentColor}" />
+    </Style>
+    <Style Selector="ToggleSwitch.mode-switch:disabled">
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+    <Style Selector="TextBox.console">
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="FontFamily" Value="Menlo,Consolas,monospace" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Background" Value="{DynamicResource ConsoleBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="12" />
+    </Style>
+</Styles>

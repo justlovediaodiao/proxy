@@ -3,10 +3,11 @@ using Avalonia.Controls;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using gui_net.Services;
+using SukiUI.Controls;
 
 namespace gui_net.Views;
 
-public partial class LogWindow : Window
+public partial class LogWindow : SukiWindow
 {
     private readonly ProcessLogBuffer _logs;
     private readonly DispatcherTimer _refreshTimer;

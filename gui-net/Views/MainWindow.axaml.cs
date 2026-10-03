@@ -1,10 +1,11 @@
 using Avalonia.Controls;
-using Avalonia.Input;
+using Avalonia.Interactivity;
+using SukiUI.Controls;
 using gui_net.ViewModels;
 
 namespace gui_net.Views;
 
-public partial class MainWindow : Window
+public partial class MainWindow : SukiWindow
 {
     private LogWindow? _logWindow;
 
@@ -15,7 +16,9 @@ public partial class MainWindow : Window
         Closing += MainWindow_Closing;
     }
 
-    private void ProxyTitle_PointerPressed(object? sender, PointerPressedEventArgs e)
+    private void OpenLogs_Click(object? sender, RoutedEventArgs e) => OpenLogs();
+
+    private void OpenLogs()
     {
         if (DataContext is not MainWindowViewModel vm)
             return;
@@ -29,7 +32,6 @@ public partial class MainWindow : Window
         _logWindow = new LogWindow(vm.Logs);
         _logWindow.Closed += (_, _) => _logWindow = null;
         _logWindow.Show(this);
-        e.Handled = true;
     }
 
     private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)

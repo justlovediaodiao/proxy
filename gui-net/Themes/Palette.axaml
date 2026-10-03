@@ -1,0 +1,39 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+            <Color x:Key="SukiStrongBackground">#F4F6FA</Color>
+            <Color x:Key="SukiCardBackground">#FFFFFF</Color>
+            <Color x:Key="SukiGlassCardBackground">#F5FFFFFF</Color>
+            <Color x:Key="SukiGlassCardOpaqueBackground">#FFFFFF</Color>
+            <Color x:Key="SukiPopupBackground">#FFFFFF</Color>
+            <Color x:Key="SukiText">#202A40</Color>
+            <Color x:Key="SukiLowText">#606D85</Color>
+            <Color x:Key="SukiMuteText">#7C879B</Color>
+            <Color x:Key="SukiBorderBrush">#E0E5EF</Color>
+            <Color x:Key="GlassBorderBrush">#E0E5EF</Color>
+            <Color x:Key="SukiControlBorderBrush">#C5CDDC</Color>
+            <SolidColorBrush x:Key="InsetBrush">#F5F7FC</SolidColorBrush>
+            <SolidColorBrush x:Key="ConsoleBrush">#F8F9FD</SolidColorBrush>
+            <SolidColorBrush x:Key="ErrorBrush">#B63048</SolidColorBrush>
+            <SolidColorBrush x:Key="ErrorBackgroundBrush">#FFF0F3</SolidColorBrush>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+            <Color x:Key="SukiStrongBackground">#131824</Color>
+            <Color x:Key="SukiCardBackground">#1E2635</Color>
+            <Color x:Key="SukiGlassCardBackground">#F01E2635</Color>
+            <Color x:Key="SukiGlassCardOpaqueBackground">#1E2635</Color>
+            <Color x:Key="SukiPopupBackground">#1E2635</Color>
+            <Color x:Key="SukiText">#EDF1FA</Color>
+            <Color x:Key="SukiLowText">#B0BCD2</Color>
+            <Color x:Key="SukiMuteText">#8E9BB4</Color>
+            <Color x:Key="SukiBorderBrush">#344056</Color>
+            <Color x:Key="GlassBorderBrush">#344056</Color>
+            <Color x:Key="SukiControlBorderBrush">#52617A</Color>
+            <SolidColorBrush x:Key="InsetBrush">#181F2D</SolidColorBrush>
+            <SolidColorBrush x:Key="ConsoleBrush">#141B28</SolidColorBrush>
+            <SolidColorBrush x:Key="ErrorBrush">#FFABB9</SolidColorBrush>
+            <SolidColorBrush x:Key="ErrorBackgroundBrush">#3D2534</SolidColorBrush>
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>

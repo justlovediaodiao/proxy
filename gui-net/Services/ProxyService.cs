@@ -13,6 +13,28 @@ public class ProxyService
 
     public ProcessLogBuffer Logs { get; } = new();
 
+    public event Action? ProcessExitedUnexpectedly;
+
+    // Read on apply completion or an exit notification, never polled.
+    public string? ProcessFailure
+    {
+        get
+        {
+            var process = _proxyProcess;
+            try
+            {
+                return process is { HasExited: true }
+                    ? $"Proxy process exited with code {process.ExitCode}."
+                    : null;
+            }
+            catch (InvalidOperationException)
+            {
+                // A process being stopped may already have been disposed.
+                return null;
+            }
+        }
+    }
+
     public Config Config
     {
         get
@@ -118,6 +140,8 @@ public class ProxyService
                     {
                         Logs.Append("proxy", "Process exited.");
                     }
+                    if (ReferenceEquals(_proxyProcess, process))
+                        ProcessExitedUnexpectedly?.Invoke();
                 };
 
                 _proxyProcess = process;
@@ -135,26 +159,29 @@ public class ProxyService
                 _proxyProcess?.Dispose();
                 _proxyProcess = null;
                 Logs.Append("proxy", $"Failed to start process: {ex.Message}");
+                throw new InvalidOperationException($"Failed to start proxy process: {ex.Message}", ex);
             }
         }
     }
 
     private void StopProxyProcess()
     {
-        if (_proxyProcess != null)
+        var process = _proxyProcess;
+        // Detach before stopping so an intentional exit cannot report an error.
+        _proxyProcess = null;
+        if (process != null)
         {
             try
             {
-                if (!_proxyProcess.HasExited)
+                if (!process.HasExited)
                 {
                     Logs.Append("proxy", "Stopping process.");
-                    _proxyProcess.Kill();
-                    _proxyProcess.WaitForExit(2_000);
+                    process.Kill();
+                    process.WaitForExit(2_000);
                 }
             }
             catch { }
-            _proxyProcess.Dispose();
-            _proxyProcess = null;
+            process.Dispose();
         }
     }
 
