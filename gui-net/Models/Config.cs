@@ -7,6 +7,7 @@ namespace gui_net.Models;
     WriteIndented = true
 )]
 [JsonSerializable(typeof(Config))]
+[JsonSerializable(typeof(string[]))]
 public partial class JsonContext : JsonSerializerContext;
 
 public class Config

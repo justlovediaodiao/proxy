@@ -8,7 +8,7 @@ public class PacServer
     private readonly ProcessLogBuffer _logs;
     private HttpListener? _listener;
     private Thread? _serverThread;
-    private string? _pacContent;
+    private volatile string? _pacContent;
     private bool _running;
 
     public PacServer(ProcessLogBuffer logs)
@@ -47,6 +47,11 @@ public class PacServer
         _listener?.Close();
         _listener = null;
         _pacContent = null;
+    }
+
+    public void Reload()
+    {
+        _pacContent = File.ReadAllText("resources/pac.js");
     }
 
     private void Listen()

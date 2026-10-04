@@ -24,6 +24,44 @@
     <Style Selector="Button.status-log:pointerover">
         <Setter Property="Background" Value="Transparent" />
     </Style>
+    <Style Selector="Button.pac-refresh">
+        <Setter Property="Width" Value="18" />
+        <Setter Property="Height" Value="18" />
+        <Setter Property="MinWidth" Value="18" />
+        <Setter Property="MinHeight" Value="18" />
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+    <Style Selector="Button.pac-refresh:pointerover">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="Path.refresh-icon">
+        <Setter Property="Stroke" Value="{DynamicResource SukiLowText}" />
+        <Setter Property="Opacity" Value="0.55" />
+    </Style>
+    <Style Selector="Button.pac-refresh:pointerover Path.refresh-icon">
+        <Setter Property="Stroke" Value="{DynamicResource SukiText}" />
+        <Setter Property="Opacity" Value="1" />
+    </Style>
+    <Style Selector="Path.refresh-icon.error">
+        <Setter Property="Stroke" Value="{DynamicResource ErrorBrush}" />
+        <Setter Property="Opacity" Value="1" />
+    </Style>
+    <Style Selector="Path.refresh-icon.updating">
+        <Style.Animations>
+            <Animation Duration="0:0:1" IterationCount="Infinite">
+                <KeyFrame Cue="0%">
+                    <Setter Property="RotateTransform.Angle" Value="0" />
+                </KeyFrame>
+                <KeyFrame Cue="100%">
+                    <Setter Property="RotateTransform.Angle" Value="360" />
+                </KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
     <Style Selector="ToggleSwitch.mode-switch">
         <Setter Property="Width" Value="116" />
         <Setter Property="Height" Value="34" />

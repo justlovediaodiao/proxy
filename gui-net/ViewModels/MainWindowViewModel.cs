@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using gui_net.Services;
 using Avalonia.Threading;
 
@@ -21,7 +22,46 @@ public partial class MainWindowViewModel : ObservableObject
     public bool PacModeSelected => !GlobalModeSelected;
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(UpdatePacCommand))]
     private bool _controlsEnabled = true;
+
+    [ObservableProperty]
+    private bool _isUpdatingPac;
+
+    [ObservableProperty]
+    private string _pacUpdateToolTip = "Update PAC rules";
+
+    [ObservableProperty]
+    private bool _pacUpdateFailed;
+
+    private bool CanUpdatePac() => ControlsEnabled;
+
+    [RelayCommand(CanExecute = nameof(CanUpdatePac))]
+    private async Task UpdatePacAsync()
+    {
+        ControlsEnabled = false;
+        IsUpdatingPac = true;
+        PacUpdateToolTip = "Updating PAC rules…";
+        PacUpdateFailed = false;
+        try
+        {
+            var usedLocalRules = await Task.Run(() => _proxyService.UpdatePacAsync());
+            PacUpdateToolTip = usedLocalRules
+                ? "Update PAC rules — last update used local rules (download unavailable)"
+                : "Update PAC rules — updated successfully";
+        }
+        catch (Exception ex)
+        {
+            PacUpdateFailed = true;
+            PacUpdateToolTip = $"Update PAC rules — update failed: {ex.Message}";
+            Logs.Append("pac", PacUpdateToolTip);
+        }
+        finally
+        {
+            IsUpdatingPac = false;
+            ControlsEnabled = true;
+        }
+    }
 
     [ObservableProperty]
     private bool _isApplyingStatus;

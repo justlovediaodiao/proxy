@@ -60,8 +60,8 @@ public class ProxyService
             _config.ProxyUrl = _config.Protocol switch
             {
                 "http" => $"PROXY {_config.Host}:{_config.Port};DIRECT",
-                "socks" => $"SOCKS://{_config.Host}:{_config.Port};DIRECT",
-                "socks5" => $"SOCKS5://{_config.Host}:{_config.Port};DIRECT",
+                "socks" => $"SOCKS {_config.Host}:{_config.Port};DIRECT",
+                "socks5" => $"SOCKS5 {_config.Host}:{_config.Port};DIRECT",
                 _ => $"PROXY {_config.Host}:{_config.Port};DIRECT"
             };
         }
@@ -87,6 +87,13 @@ public class ProxyService
         SetPac(Config);
         StartPacServer();
         StartProxyProcess();
+    }
+
+    public async Task<bool> UpdatePacAsync()
+    {
+        var usedLocalRules = await new PacUpdater(Logs).UpdateAsync(Config);
+        _pacServer?.Reload();
+        return usedLocalRules;
     }
 
     private void StartProxyProcess()
