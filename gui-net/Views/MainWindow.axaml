@@ -29,11 +29,18 @@
                                  IsIndeterminate="True" IsVisible="{Binding IsApplyingStatus}" ToolTip.Tip="Applying changes" />
                 </StackPanel>
             </Grid>
-            <TextBlock Grid.Row="1" Text="Enable" Classes="secondary" FontSize="13" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="1" Text="Enable" Foreground="{DynamicResource SukiText}" FontSize="13" VerticalAlignment="Center" />
             <ToggleSwitch Grid.Row="1" Grid.Column="1" Name="ProxyToggle" HorizontalAlignment="Right"
                           IsChecked="{Binding ProxyEnabled, Mode=TwoWay}" IsEnabled="{Binding ControlsEnabled}"
-                          automation:AutomationProperties.Name="Enable system proxy" />
-            <TextBlock Grid.Row="2" Text="Mode" Classes="secondary" FontSize="13" VerticalAlignment="Center" />
+                          automation:AutomationProperties.Name="Enable system proxy">
+                <ToggleSwitch.OnContent>
+                    <TextBlock Text="On" Foreground="{DynamicResource SukiText}" />
+                </ToggleSwitch.OnContent>
+                <ToggleSwitch.OffContent>
+                    <TextBlock Text="Off" Foreground="{DynamicResource SukiText}" />
+                </ToggleSwitch.OffContent>
+            </ToggleSwitch>
+            <TextBlock Grid.Row="2" Text="Mode" Foreground="{DynamicResource SukiText}" FontSize="13" VerticalAlignment="Center" />
             <ToggleSwitch Grid.Row="2" Grid.Column="1" Name="ModeSwitch" Classes="mode-switch"
                           HorizontalAlignment="Right" IsChecked="{Binding GlobalModeSelected, Mode=TwoWay}"
                           IsEnabled="{Binding ControlsEnabled}" OnContent="Global" OffContent="PAC"
