@@ -1,11 +1,11 @@
-<suki:SukiWindow xmlns="https://github.com/avaloniaui"
+<Window xmlns="https://github.com/avaloniaui"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:vm="using:gui_net.ViewModels"
                  xmlns:suki="clr-namespace:SukiUI.Controls;assembly=SukiUI"
                  xmlns:automation="using:Avalonia.Automation"
                  x:Class="gui_net.Views.MainWindow" x:DataType="vm:MainWindowViewModel"
-                 Width="320" Height="260" MinWidth="320" MinHeight="260"
-                 BackgroundStyle="Flat" BackgroundAnimationEnabled="False"
+                 Width="320" Height="220" MinWidth="320" MinHeight="220"
+                 Background="{DynamicResource SukiStrongBackground}"
                  Icon="avares://gui-net/Assets/avalonia-logo.ico" Title="Proxy">
     <suki:GlassCard Name="ControlCard" HorizontalAlignment="Center" VerticalAlignment="Center" Width="280" Padding="20" Margin="20">
         <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,*" RowSpacing="20" ColumnSpacing="20">
@@ -47,4 +47,4 @@
                           automation:AutomationProperties.Name="Proxy routing mode" />
         </Grid>
     </suki:GlassCard>
-</suki:SukiWindow>
+</Window>

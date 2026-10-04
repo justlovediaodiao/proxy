@@ -1,12 +1,11 @@
-<suki:SukiWindow xmlns="https://github.com/avaloniaui"
+<Window xmlns="https://github.com/avaloniaui"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                 xmlns:suki="clr-namespace:SukiUI.Controls;assembly=SukiUI"
                  x:Class="gui_net.Views.LogWindow"
                  Width="760" Height="480" MinWidth="480" MinHeight="300"
-                 BackgroundStyle="Flat" BackgroundAnimationEnabled="False"
+                 Background="{DynamicResource SukiStrongBackground}"
                  Icon="avares://gui-net/Assets/avalonia-logo.ico" Title="Proxy Logs">
     <TextBox x:Name="LogTextBox" Classes="console" IsReadOnly="True" AcceptsReturn="True"
              TextWrapping="NoWrap" VerticalContentAlignment="Top" HorizontalContentAlignment="Left"
              VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
              ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" />
-</suki:SukiWindow>
+</Window>

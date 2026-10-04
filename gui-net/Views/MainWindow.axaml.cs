@@ -1,11 +1,10 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using SukiUI.Controls;
 using gui_net.ViewModels;
 
 namespace gui_net.Views;
 
-public partial class MainWindow : SukiWindow
+public partial class MainWindow : Window
 {
     private LogWindow? _logWindow;
 
