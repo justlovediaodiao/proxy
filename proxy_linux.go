@@ -10,7 +10,12 @@ import (
 
 // SetGlobal set os proxy to http or socks.
 func SetGlobal(c *Config) error {
-	var err error
+	// GNOME accepts CIDR ranges rather than Windows-style IP wildcards.
+	err := execute("gsettings", "set", "org.gnome.system.proxy", "ignore-hosts",
+		"['localhost', '127.0.0.1', '::1', '*.local', '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16']")
+	if err != nil {
+		return err
+	}
 	if c.Protocol == "http" {
 		err = execute("gsettings", "set", "org.gnome.system.proxy.http", "host", c.Host)
 		if err != nil {

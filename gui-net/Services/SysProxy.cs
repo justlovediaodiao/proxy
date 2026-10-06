@@ -11,6 +11,7 @@ internal static class MacProxy
         var networks = ListNetworks();
         foreach (var network in networks)
         {
+            Execute("networksetup", $"-setproxybypassdomains \"{network}\" localhost 127.0.0.1 ::1 *.local 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16");
             if (c.Protocol == "http")
             {
                 Execute("networksetup", $"-setwebproxy \"{network}\" {c.Host} {c.Port}");
@@ -96,6 +97,7 @@ internal static class LinuxProxy
 {
     public static void SetGlobal(Config c)
     {
+        Execute("gsettings", "set org.gnome.system.proxy ignore-hosts \"['localhost', '127.0.0.1', '::1', '*.local', '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16']\"");
         if (c.Protocol == "http")
         {
             Execute("gsettings", $"set org.gnome.system.proxy.http host '{c.Host}'");

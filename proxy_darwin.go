@@ -15,6 +15,13 @@ func SetGlobal(c *Config) error {
 		return err
 	}
 	for _, network := range networks {
+		// Match the private IPv4 ranges bypassed by the Windows implementation.
+		err = execute("networksetup", "-setproxybypassdomains", network,
+			"localhost", "127.0.0.1", "::1", "*.local",
+			"10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16")
+		if err != nil {
+			return err
+		}
 		if c.Protocol == "http" {
 			err = execute("networksetup", "-setwebproxy", network, c.Host, strconv.Itoa(c.Port))
 			if err != nil {
