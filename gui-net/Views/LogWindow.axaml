@@ -3,7 +3,7 @@
                  x:Class="gui_net.Views.LogWindow"
                  Width="760" Height="480" MinWidth="480" MinHeight="300"
                  Background="{DynamicResource SukiStrongBackground}"
-                 Icon="avares://gui-net/Assets/avalonia-logo.ico" Title="Proxy Logs">
+                 Icon="avares://proxy/Assets/avalonia-logo.ico" Title="Proxy Logs">
     <TextBox x:Name="LogTextBox" Classes="console" IsReadOnly="True" AcceptsReturn="True"
              TextWrapping="NoWrap" VerticalContentAlignment="Top" HorizontalContentAlignment="Left"
              VerticalAlignment="Stretch" HorizontalAlignment="Stretch"

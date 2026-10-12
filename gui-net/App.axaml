@@ -5,12 +5,12 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceInclude Source="avares://gui-net/Themes/Palette.axaml" />
+                <ResourceInclude Source="avares://proxy/Themes/Palette.axaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
     <Application.Styles>
         <suki:SukiTheme ThemeColor="Blue" />
-        <StyleInclude Source="avares://gui-net/Themes/Presentation.axaml" />
+        <StyleInclude Source="avares://proxy/Themes/Presentation.axaml" />
     </Application.Styles>
 </Application>

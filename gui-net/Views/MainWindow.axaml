@@ -6,7 +6,7 @@
                  x:Class="gui_net.Views.MainWindow" x:DataType="vm:MainWindowViewModel"
                  Width="320" Height="220" MinWidth="320" MinHeight="220"
                  Background="{DynamicResource SukiStrongBackground}"
-                 Icon="avares://gui-net/Assets/avalonia-logo.ico" Title="Proxy">
+                 Icon="avares://proxy/Assets/avalonia-logo.ico" Title="Proxy">
     <suki:GlassCard Name="ControlCard" HorizontalAlignment="Center" VerticalAlignment="Center" Width="280" Padding="20" Margin="20">
         <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,*" RowSpacing="20" ColumnSpacing="20">
             <Grid Grid.ColumnSpan="2" ColumnDefinitions="*,Auto" ColumnSpacing="12">

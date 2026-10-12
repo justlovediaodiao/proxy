@@ -21,7 +21,6 @@ mkdir -p "$APP_BUNDLE/Contents/Resources"
 echo "Copying files to app bundle..."
 rsync -a --exclude='*.dSYM' "$OUTPUT_DIR/" "$APP_BUNDLE/Contents/MacOS/"
 
-mv "$APP_BUNDLE/Contents/MacOS/gui-net" "$APP_BUNDLE/Contents/MacOS/$APP_NAME"
 chmod +x "$APP_BUNDLE/Contents/MacOS/$APP_NAME"
 
 echo "Copying icon..."
